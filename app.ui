@@ -7,11 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>331</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#MainWindow{ 
+        background-image: url(&quot;C:/Users/ramin rowshan/Desktop/pyqt/background.jpg&quot;); 
+        background-repeat: no-repeat; 
+        background-position: center;}
+    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="verticalLayoutWidget_3">
@@ -45,13 +52,6 @@
           <item>
            <layout class="QHBoxLayout" name="manual_file_path">
             <item>
-             <widget class="QLabel" name="manual_file_path_text">
-              <property name="text">
-               <string>select file</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="manual_file_path_button">
               <property name="maximumSize">
                <size>
@@ -59,8 +59,22 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: #2B5DD1; color: #FFFFFF ; border-style: outset; 
+padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
+              </property>
               <property name="text">
                <string>file path</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="manual_file_path_text">
+              <property name="text">
+               <string>select file</string>
+              </property>
+              <property name="margin">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -72,13 +86,6 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="manual_result_path_text">
-              <property name="text">
-               <string>select folder</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="manual_result_path_button">
               <property name="maximumSize">
                <size>
@@ -86,8 +93,22 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: #2B5DD1; color: #FFFFFF ; border-style: outset; 
+padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
+              </property>
               <property name="text">
                <string>result path</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="manual_result_path_text">
+              <property name="text">
+               <string>select folder</string>
+              </property>
+              <property name="margin">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -102,6 +123,10 @@
             <width>150</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #FF6987; color: #FFFFFF ; border-style: outset; 
+padding: 8px 40px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
           </property>
           <property name="text">
            <string>start</string>

@@ -1,7 +1,7 @@
 import sys
 import os
 from PyQt5.QtWidgets import QApplication, QWidget,QMainWindow,QFileDialog,QMessageBox
-from PyQt5 import uic
+from PyQt5 import uic,QtGui
 from functools import partial
 import pydicom
 
@@ -9,11 +9,18 @@ import pydicom
 class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.file_name = '';
         uic.loadUi('./app.ui',self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory,self.manual_result_path_text))
         self.manual_start.clicked.connect(self.workWithFile)
+
+        self.file_name = '';
+        self.is_manual_file_path_set = False
+        self.is_manual_folder_result_set = False
+
+        self.setWindowTitle("trauma")
+        self.setWindowIcon(QtGui.QIcon("./logo.png"))
+
 
     
     def getFileName(self):
@@ -27,6 +34,8 @@ class MyApp(QMainWindow):
         )
         if response[0]:
             self.manual_file_path_text.setText(response[0])
+            self.is_manual_file_path_set = True
+
 
     def getDirectory(self,the_label):
         response = QFileDialog.getExistingDirectory(
@@ -37,9 +46,22 @@ class MyApp(QMainWindow):
 
         if response:
             the_label.setText(response)
+            self.is_manual_folder_result_set = True
 
 
     def workWithFile(self):
+        if((not self.is_manual_file_path_set) and (not self.is_manual_folder_result_set)):
+            QMessageBox.warning(self, "lack of information", "you must fill file path and result folder ")
+            return
+        elif(not self.is_manual_file_path_set):
+            QMessageBox.warning(self, "lack of information", "you must fill file path")
+            return
+        elif(not self.is_manual_folder_result_set):
+            QMessageBox.warning(self, "lack of information", "you must fill result folder")
+            return
+
+
+
        
         try:
             file = self.readFile();
