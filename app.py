@@ -4,10 +4,10 @@ from PyQt5.QtWidgets import QApplication, QWidget,QMainWindow,QFileDialog,QMessa
 from PyQt5 import uic,QtGui
 from functools import partial
 import pydicom
-
-
+from DicomFileHandler import DicomHandler as DH
+import Type as TP
 class MyApp(QMainWindow):
-    def __init__(self):
+    def __init__(self,isReadFileMode):
         super().__init__()
         uic.loadUi('./app.ui',self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
@@ -18,13 +18,15 @@ class MyApp(QMainWindow):
         self.is_manual_file_path_set = False
         self.is_manual_folder_result_set = False
 
+        self.isReadFileMode = isReadFileMode
+
         self.setWindowTitle("trauma")
         self.setWindowIcon(QtGui.QIcon("./logo.png"))
 
 
     
     def getFileName(self):
-        file_filter = 'Data file (*.dcm)'
+        file_filter = 'Data file (*.dcm *.nii)'
         response = QFileDialog.getOpenFileName(
             parent=self,
             caption='select a file',
@@ -64,24 +66,49 @@ class MyApp(QMainWindow):
 
        
         try:
-            file = self.readFile();
-            #work with file
-            self.writeFile(file)
+            if(self.isReadFileMode):
+                type = DH.getFileType(self.manual_file_path_text.text())
+                if(type == TP.Type.DICOM):
+                    file = self.readFilePyDicom();
+                    #work with file
+                    self.writeFilePyDicom(file)
+                    
+                else:
+                    file = self.readFileNifti()
+                    print(file)
+                    #work with nifit
+                    #todo
+                
+            else:
+                file = self.readFileByte()
+                #work with file if it is nifti
+                self.writeFileByte(b''.join(file))
             self.workWithFileDone()
         except Exception as e:
+            print(e)
             self.workingWithFIleError()
     
-    def readFile(self):
-        file =   pydicom.dcmread(self.manual_file_path_text.text())
-        self.file_name = self.manual_file_path_text.text().split('/')[-1] + "_result"
+    def readFilePyDicom(self):
+       
+        file,self.file_name = DH.readDicomPydicom(self.manual_file_path_text.text())
         return file
-        
 
-    def writeFile(self,result):
-        result.save_as(self.manual_result_path_text.text()+"/"+self.file_name)
-        
+    def readFileByte(self):
+        file,self.file_name = DH.readByte(self.manual_file_path_text.text())
+        return file
+
+    def readFileNifti(self):
+        file,self.file_name = DH.readNifti(self.manual_file_path_text.text())
+        return file
+
+    def writeFilePyDicom(self,result):
+        DH.writeFilePyDicom(self.manual_result_path_text.text(),self.file_name,result)
+
+    def writeFileByte(self,result):
+        DH.writeDicomByte(self.manual_result_path_text.text(),self.file_name,result)
+
     def workWithFileDone(self):
-        QMessageBox.warning(self, "job done", "the job has done")
+        QMessageBox.information(self, "job done", "the job has done")
 
 
     def workingWithFIleError(self):
@@ -90,8 +117,7 @@ class MyApp(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
-    gui = MyApp()
+    gui = MyApp(True)
     gui.show()
 
 
