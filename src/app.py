@@ -10,7 +10,7 @@ import Type as TP
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        uic.loadUi('./app.ui', self)
+        uic.loadUi('app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
         self.manual_start.clicked.connect(self.workWithFile)
