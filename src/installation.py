@@ -25,6 +25,7 @@ class Installation:
                 installation_code = os.system(f"pyinstaller --hidden-import pydicom.encoders.gdcm "
                                               f"-p assets "
                                               f"--add-data app.ui;{self.installation_path}/ "
+                                              # f"--icon=assets/logo.ico "
                                               f"--hidden-import pydicom.encoders.pylibjpeg --onefile {self.python_script} "
                                               f"--distpath {self.installation_path}")
                 if installation_code == 0:
