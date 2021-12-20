@@ -11,10 +11,9 @@ class Installation:
 
     def install(self):
         if self.os_name == "windows":
-            installation_code = os.system("pyinstaller " +
-                                          # "--add-data " + "../assets:. " +
-                                          "--onefile " + "--hidden-import pydicom.encoders.gdcm "
-                                          "--hidden-import pydicom.encoders.pylibjpeg " +
-                                          self.python_script + " --distpath " + self.installation_path)
-            print(installation_code)
+            installation_code = os.system(f"pyinstaller --onefile --hidden-import pydicom.encoders.gdcm "
+                                          f"--hidden-import pydicom.encoders.pylibjpeg {self.python_script}"
+                                          f"  --distpath {self.installation_path}")
+            if installation_code == 0:
+                print(f"Application Installed Successfully at {self.installation_path}/app")
 
