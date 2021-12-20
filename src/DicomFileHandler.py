@@ -2,7 +2,7 @@ import pydicom
 import nibabel as nib
 from nibabel.testing import data_path
 import os
-from src import Type as TP
+import Type as TP
 
 
 class DicomFileHandler:

@@ -1,9 +1,10 @@
 import click
 from installation import Installation
+import pydicom
 
 
 @click.command()
-@click.option('--os_name', default="windows", help="OS name which package will be installed on. Specify os name with "
+@click.option('--os-name', default="windows", help="OS name which package will be installed on. Specify os name with "
                                                    "lowercase letters e.g. windows, linux, mac")
 @click.option('--path', default=".", help="Installation Path")
 def os(os_name, path):

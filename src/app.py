@@ -21,7 +21,7 @@ class MyApp(QMainWindow):
 
         self.isReadFileMode = isReadFileMode
 
-        self.setWindowTitle("trauma")
+        self.setWindowTitle("Trauma")
         self.setWindowIcon(QtGui.QIcon("./logo.png"))
 
     def getFileName(self):
