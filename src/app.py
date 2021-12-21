@@ -10,7 +10,8 @@ import Type as tP
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        uic.loadUi('app.ui', self)
+        print( os.listdir())
+        uic.loadUi('src/app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
         self.manual_start.clicked.connect(self.workWithFile)
@@ -22,7 +23,7 @@ class MyApp(QMainWindow):
         self.isReadFileMode = isReadFileMode
 
         self.setWindowTitle("Trauma")
-        self.setWindowIcon(QtGui.QIcon("./logo.png"))
+        self.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
 
     def getFileName(self):
         file_filter = 'Data file (*.dcm *.nii)'
@@ -110,7 +111,7 @@ class MyApp(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    gui = MyApp(True)
+    gui = MyApp(False)
     gui.show()
 
     try:
