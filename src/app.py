@@ -3,8 +3,8 @@ import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5 import uic, QtGui
 from functools import partial
-from DicomFileHandler import DicomHandler as DH
-import Type as TP
+from DicomFileHandler import DicomHandler as dH
+import Type as tP
 
 
 class MyApp(QMainWindow):
@@ -61,8 +61,8 @@ class MyApp(QMainWindow):
 
         try:
             if self.isReadFileMode:
-                type = DH.getFileType(self.manual_file_path_text.text())
-                if type == TP.Type.DICOM:
+                type = dH.getFileType(self.manual_file_path_text.text())
+                if type == tP.Type.DICOM:
                     file = self.readFilePyDicom();
                     # work with file
                     self.writeFilePyDicom(file)
@@ -84,22 +84,22 @@ class MyApp(QMainWindow):
 
     def readFilePyDicom(self):
 
-        file, self.file_name = DH.readDicomPydicom(self.manual_file_path_text.text())
+        file, self.file_name = dH.readDicomPydicom(self.manual_file_path_text.text())
         return file
 
     def readFileByte(self):
-        file, self.file_name = DH.readByte(self.manual_file_path_text.text())
+        file, self.file_name = dH.readByte(self.manual_file_path_text.text())
         return file
 
     def readFileNifti(self):
-        file, self.file_name = DH.readNifti(self.manual_file_path_text.text())
+        file, self.file_name = dH.readNifti(self.manual_file_path_text.text())
         return file
 
     def writeFilePyDicom(self, result):
-        DH.writeFilePyDicom(self.manual_result_path_text.text(), self.file_name, result)
+        dH.writeFilePyDicom(self.manual_result_path_text.text(), self.file_name, result)
 
     def writeFileByte(self, result):
-        DH.writeDicomByte(self.manual_result_path_text.text(), self.file_name, result)
+        dH.writeDicomByte(self.manual_result_path_text.text(), self.file_name, result)
 
     def workWithFileDone(self):
         QMessageBox.information(self, "job done", "the job has done")
