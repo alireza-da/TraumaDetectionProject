@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#MainWindow{ 
-        background-image: url(&quot;assets/background.jpg&quot;);
+        background-image: url(&quot;src/assets/background.jpg&quot;);
         background-repeat: no-repeat; 
         background-position: center;}
     </string>

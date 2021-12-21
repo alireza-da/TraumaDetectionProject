@@ -8,28 +8,38 @@ import Type as TP
 class DicomFileHandler:
 
     def readByte(self, name):
-        result = []
-        with open(name, "rb") as f:
-            byte = f.read(1)
-            while byte:
-                result.append(byte)
+        try:
+            result = []
+            with open(name, "rb") as f:
                 byte = f.read(1)
-        return result, self.getNameOfFile(name)
+                while byte:
+                    result.append(byte)
+                    byte = f.read(1)
+            return result, self.getNameOfFile(name)
+        except Exception  as e:
+            raise Exception('wrogn path')
+
 
     def writeDicomByte(self, path, name, byteArray):
         with open(self.createDcmName(path, name), "wb") as f:
             f.write(byteArray)
 
     def readNifti(self, name):
-        filePath = os.path.join(data_path, name)
-        return nib.load(filePath), self.getNameOfFile(name)
+        try:
+            filePath = os.path.join(data_path, name)
+            return nib.load(filePath), self.getNameOfFile(name)
+        except:
+            raise Exception("wrong path")
 
     def readDicomPydicom(self, name):
-        file = pydicom.dcmread(name)
-        return file, self.getNameOfFile(name)
+        try:
+            file = pydicom.dcmread(name)
+            return file, self.getNameOfFile(name)
+        except:
+            raise Exception('wrogn path')
 
     def writeFilePyDicom(self, path, name, result):
-        result.save_as(self.createDcmName(path, name))
+                result.save_as(self.createDcmName(path, name))
 
     def getNameOfFile(self, name):
         return name.split('/')[-1].split('.')[0] + "_result"
