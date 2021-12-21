@@ -3,7 +3,6 @@ import os
 from PyQt5.QtWidgets import QApplication, QWidget,QMainWindow,QFileDialog,QMessageBox
 from PyQt5 import uic,QtGui
 from functools import partial
-import pydicom
 from DicomFileHandler import DicomHandler as DH
 import Type as TP
 class MyApp(QMainWindow):
