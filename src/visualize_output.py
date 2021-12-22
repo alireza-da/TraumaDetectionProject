@@ -74,13 +74,13 @@ def dicom_date_to_str(date):
     day = date[6:8]
     return f"{year}-{month}-{day}"
 
-
+# TODO particular except clause
 def dicom_to_png(dicom_image, path, filename):
     img = dicom_image.pixel_array.astype(float)  # get image array
     scaled_image = (np.maximum(img, 0) / img.max()) * 255.0
     scaled_image = np.uint8(scaled_image)
     final_image = Image.fromarray(scaled_image)
-    final_image.show()
+    # final_image.show()
     try:
         final_image.save(f"{path}/{filename}.png")
     except:
@@ -88,15 +88,17 @@ def dicom_to_png(dicom_image, path, filename):
     return final_image
 
 
-# TODO 1- make read_dicom's file_pattern dynamic
-def read_dicom(mask_path, patient_path, patient_filepattern):
+def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
     patient_files = read_dicom_series(patient_path, patient_filepattern)
-    mask_files = read_dicom_series(mask_path)
+    mask_files = read_dicom_series(mask_path, mask_filepattern)
     return patient_files, mask_files
 
 
+# TODO 1- add copy to clipboard button
+#      2- add save button
+
 class OutputWindow:
-    def __init__(self, mask_path, patient_path, patient_filepattern):
+    def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern):
         user32 = ctypes.windll.user32
         screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.title = "Report"
@@ -105,12 +107,13 @@ class OutputWindow:
         self.app = QApplication([])
         self.window = QWidget()
         self.dicom_image_index = 0
-        self.images = read_dicom(mask_path, patient_path, patient_filepattern)
+        self.images = read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern)
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
 
     def create_window(self):
         self.add_layout()
+        self.window.showMaximized()
         self.window.show()
         self.app.exec_()
 
@@ -145,15 +148,16 @@ class OutputWindow:
         # - convert dicom to png
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
-        dicom_to_png(pat_dicom_img, "temp/images", patient_id)
+        patient_name = pat_dicom_img.data_element('PatientName').value
+        dicom_to_png(pat_dicom_img, "temp/images", patient_name)
         pat_image_label = QLabel()
-        pat_image = QPixmap(f"temp/images/{patient_id}.png")
+        pat_image = QPixmap(f"temp/images/{patient_name}.png")
         pat_image_label.setPixmap(pat_image)
         dicom_images_layout.addWidget(pat_image_label)
         # - model result
         mask_image_label = QLabel()
-        dicom_to_png(self.mask_dicom[self.dicom_image_index], "temp/images", f"{patient_id}_mask")
-        mask_image = QPixmap(f"temp/images/{patient_id}_mask.png")
+        dicom_to_png(self.mask_dicom[10], "temp/images", f"{patient_name}_mask")
+        mask_image = QPixmap(f"temp/images/{pat_dicom_img.data_element('PatientName').value}_mask.png")
         mask_image_label.setPixmap(mask_image)
         dicom_images_layout.addWidget(mask_image_label)
         dicom_viewer_layout.addWidget(dicom_images_widget)
@@ -217,5 +221,6 @@ class OutputWindow:
 # script to be written when user clicks start
 if __name__ == "__main__":
     ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-                      "C:\\Users\\rasta\\Downloads\\liver 6\\liver 6\\^95020329_20210906", "FILE*")
+                      "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+                      "image_*", "image_*")
     ow.create_window()
