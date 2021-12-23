@@ -5,7 +5,7 @@ import ctypes
 import glob
 
 from matplotlib import pyplot as plt
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QGridLayout, \
     QTextEdit
 from PyQt5.QtGui import QPixmap, QIcon
@@ -74,7 +74,7 @@ def dicom_date_to_str(date):
     day = date[6:8]
     return f"{year}-{month}-{day}"
 
-# TODO particular except clause
+
 def dicom_to_png(dicom_image, path, filename):
     img = dicom_image.pixel_array.astype(float)  # get image array
     scaled_image = (np.maximum(img, 0) / img.max()) * 255.0
@@ -83,7 +83,7 @@ def dicom_to_png(dicom_image, path, filename):
     # final_image.show()
     try:
         final_image.save(f"{path}/{filename}.png")
-    except:
+    except (FileNotFoundError, UnidentifiedImageError):
         print("Something went wrong while writing image. Check your filename and path")
     return final_image
 
@@ -94,9 +94,8 @@ def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
     return patient_files, mask_files
 
 
-# TODO 1- add copy to clipboard button
-#      2- add save button
-
+# TODO: 1- add copy to clipboard button
+#       2- add buttons functionality
 class OutputWindow:
     def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern):
         user32 = ctypes.windll.user32
@@ -131,10 +130,16 @@ class OutputWindow:
         history_button.setIcon(history_icon)
         history_button.setFlat(True)
         navbar_layout.addWidget(history_button)
+        save_button = QPushButton()
+        save_icon = QIcon("assets/save.png")
+        save_button.setIcon(save_icon)
+        save_button.setFlat(True)
+        navbar_layout.addWidget(save_button)
         exit_button = QPushButton()
         exit_icon = QIcon("assets/log-out.png")
         exit_button.setIcon(exit_icon)
         exit_button.setFlat(True)
+        exit_button.clicked.connect(lambda: self.window.close())
         navbar_layout.addWidget(exit_button)
         container.setStyleSheet("background-color: grey;")
         main_navbar_layout = QVBoxLayout()
@@ -188,7 +193,14 @@ class OutputWindow:
         report_layout.addLayout(patient_details_layout)
         # - detection details
         detection_layout = QVBoxLayout()
-        detection_layout.addWidget(QLabel("Detection"))
+        detection_header_layout = QHBoxLayout()
+        detection_header_layout.addWidget(QLabel("Detection"))
+        cp_button = QPushButton()
+        cp_icon = QIcon("assets/copy.png")
+        cp_button.setIcon(cp_icon)
+        cp_button.setFlat(True)
+        detection_header_layout.addWidget(cp_button)
+        detection_layout.addLayout(detection_header_layout)
         # - model result
         detection_text = QTextEdit("1- A tumor has been detected in liver.\n 2- A tumor has been detected in liver.\n"
                                    "Summary: \n Liver has two tumors.")
@@ -203,6 +215,11 @@ class OutputWindow:
         status_image = QPixmap("assets/red_circle.png")
         status_image_label.setPixmap(status_image)
         status_layout_label.addWidget(status_image_label)
+        cp_button = QPushButton()
+        cp_icon = QIcon("assets/copy.png")
+        cp_button.setIcon(cp_icon)
+        cp_button.setFlat(True)
+        status_layout_label.addWidget(cp_button)
         status_layout.addLayout(status_layout_label)
         status_text = QTextEdit("Needs surgery. Needs ICU Reservation.")
         status_text.setFixedHeight(100)
