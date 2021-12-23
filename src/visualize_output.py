@@ -67,6 +67,7 @@ def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
 
 # TODO: 1- add copy to clipboard button
 #       2- add buttons functionality
+#       3- add patient's birthday
 class OutputWindow:
     def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern):
         user32 = ctypes.windll.user32
@@ -207,8 +208,8 @@ class OutputWindow:
 
 
 # script to be written when user clicks start
-if __name__ == "__main__":
-    ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-                      "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                      "image_*", "image_*")
-    ow.create_window()
+# if __name__ == "__main__":
+#     ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+#                       "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+#                       "image_*", "image_*")
+#     ow.create_window()

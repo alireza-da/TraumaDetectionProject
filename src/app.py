@@ -1,17 +1,17 @@
 import sys
 import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
-from PyQt5 import uic, QtGui,QtCore
+from PyQt5 import uic, QtGui, QtCore
 from functools import partial
 from DicomFileHandler import DicomHandler as dH
 import Type as tP
-
+from visualize_output import OutputWindow
 
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        print( os.listdir())
-        uic.loadUi('src/app.ui', self)
+        print(os.listdir())
+        uic.loadUi('app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
         self.manual_start.clicked.connect(self.workWithFile)
@@ -25,47 +25,42 @@ class MyApp(QMainWindow):
         self.setWindowTitle("Trauma")
         self.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
 
-
         self.setUpSidePageButton()
-        
+
     def setUpSidePageButton(self):
 
-
         self.logo_home.setIcon(QtGui.QIcon('./src/assets/home.png'))
-        self.logo_home.setIconSize(QtCore.QSize(24,24)) 
-        self.logo_home.setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+        self.logo_home.setIconSize(QtCore.QSize(24, 24))
+        self.logo_home.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_home.clicked.connect(self.homePress)
 
         self.logo_history.setIcon(QtGui.QIcon('./src/assets/history.png'))
-        self.logo_history.setIconSize(QtCore.QSize(24,24)) 
-        self.logo_history.setStyleSheet("background-color: rgba(255, 255, 255, 0);");
-        self.logo_history.clicked.connect(self.histroryPress)
-
+        self.logo_history.setIconSize(QtCore.QSize(24, 24))
+        self.logo_history.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
+        self.logo_history.clicked.connect(self.historyPress)
 
         self.logo_back.setIcon(QtGui.QIcon('./src/assets/log-out.png'))
-        self.logo_back.setIconSize(QtCore.QSize(24,24)) 
-        self.logo_back.setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+        self.logo_back.setIconSize(QtCore.QSize(24, 24))
+        self.logo_back.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_back.clicked.connect(self.close)
 
-
         self.logo_help.setIcon(QtGui.QIcon('./src/assets/help.png'))
-        self.logo_help.setIconSize(QtCore.QSize(24,24)) 
-        self.logo_help.setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+        self.logo_help.setIconSize(QtCore.QSize(24, 24))
+        self.logo_help.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_help.clicked.connect(self.helpPress)
 
-
         self.logo_email.setIcon(QtGui.QIcon('./src/assets/email.png'))
-        self.logo_email.setIconSize(QtCore.QSize(24,24)) 
-        self.logo_email.setStyleSheet("background-color: rgba(255, 255, 255, 0);");
+        self.logo_email.setIconSize(QtCore.QSize(24, 24))
+        self.logo_email.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_email.clicked.connect(self.emailPress)
-
 
     def homePress(self):
         pass
-    
-    def histroryPress(self):
+
+    def historyPress(self):
         pass
 
+    @staticmethod
     def helpPress(self):
         msgBox = QMessageBox()
         msgBox.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
@@ -73,9 +68,8 @@ class MyApp(QMainWindow):
         msgBox.setWindowTitle("help")
         msgBox.setFixedWidth(600)
         msgBox.exec()
-        
 
-    
+    @staticmethod
     def emailPress(self):
         msgBox = QMessageBox()
         msgBox.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
@@ -83,8 +77,6 @@ class MyApp(QMainWindow):
         msgBox.setWindowTitle("contact")
         msgBox.setFixedWidth(600)
         msgBox.exec()
-
-
 
     def getFileName(self):
         file_filter = 'Data file (*.dcm *.nii)'
@@ -125,9 +117,14 @@ class MyApp(QMainWindow):
             if self.isReadFileMode:
                 type = dH.getFileType(self.manual_file_path_text.text())
                 if type == tP.Type.DICOM:
-                    file = self.readFilePyDicom();
+                    file = self.readFilePyDicom()
                     # work with file
                     self.writeFilePyDicom(file)
+                    ow = OutputWindow(
+                        "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+                        "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+                        "image_*", "image_*")
+                    ow.create_window()
 
                 else:
                     file = self.readFileNifti()
@@ -164,10 +161,15 @@ class MyApp(QMainWindow):
         dH.writeDicomByte(self.manual_result_path_text.text(), self.file_name, result)
 
     def workWithFileDone(self):
-        QMessageBox.information(self, "job done", "the job has done")
+        QMessageBox.information(self, "Information", "File Saved, Started the Detection")
+        ow = OutputWindow(
+            "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+            "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+            "image_*", "image_*")
+        ow.create_window()
 
     def workingWithFIleError(self):
-        QMessageBox.warning(self, "something went wrong", "we cant work with file")
+        QMessageBox.warning(self, "something went wrong", "we can't work with file!")
 
 
 if __name__ == "__main__":
