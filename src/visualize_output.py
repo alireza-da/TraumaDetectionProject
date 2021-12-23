@@ -4,41 +4,12 @@ import natsort
 import ctypes
 import glob
 
-from matplotlib import pyplot as plt
 from PIL import Image, UnidentifiedImageError
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QGridLayout, \
     QTextEdit
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import uic
 from pydicom import read_file, dcmread
-
-
-def imshow(*args, **kwargs):
-    """ Handy function to show multiple plots in on row, possibly with different cmaps and titles
-    Usage:
-    imshow(img1, title="myPlot")
-    imshow(img1,img2, title=['title1','title2'])
-    imshow(img1,img2, cmap='hot')
-    imshow(img1,img2,cmap=['gray','Blues']) """
-    cmap = kwargs.get('cmap', 'gray')
-    title = kwargs.get('title', '')
-    if len(args) == 0:
-        raise ValueError("No images given to imshow")
-    elif len(args) == 1:
-        plt.title(title)
-        plt.imshow(args[0], interpolation='none')
-    else:
-        n = len(args)
-        if type(cmap) == str:
-            cmap = [cmap] * n
-        if type(title) == str:
-            title = [title] * n
-        plt.figure(figsize=(n * 5, 10))
-        for i in range(n):
-            plt.subplot(1, n, i + 1)
-            plt.title(title[i])
-            plt.imshow(args[i], cmap[i])
-    plt.show()
 
 
 def read_dicom_series(directory, filepattern="image_*"):
