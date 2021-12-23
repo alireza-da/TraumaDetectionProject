@@ -34,8 +34,14 @@ class Installation:
                         shutil.copytree("assets", f"{self.installation_path}/assets")
                     except shutil.SameFileError:
                         print("Config Files already exist")
-                    os.system(f"mkdir {self.installation_path}/temp")
-                    os.system(f"mkdir {self.installation_path}/temp/images")
+                    try:
+                        os.makedirs(f"{self.installation_path}/temp")
+                        os.makedirs(f"{self.installation_path}/temp/images")
+
+                    except:
+                        print("failed to create temp dir")
+
+
                     print(f"Application Installed Successfully at {self.installation_path}/app")
             else:
                 print("Error: administrator permission needed, rerun the program with administrative rights")
