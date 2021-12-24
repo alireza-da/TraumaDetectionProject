@@ -7,10 +7,11 @@ from DicomFileHandler import DicomHandler as dH
 import Type as tP
 from visualize_output import OutputWindow
 
+
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        print(os.listdir())
+        # print(os.listdir())
         uic.loadUi('app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
@@ -104,13 +105,13 @@ class MyApp(QMainWindow):
 
     def workWithFile(self):
         if (not self.is_manual_file_path_set) and (not self.is_manual_folder_result_set):
-            QMessageBox.warning(self, "lack of information", "you must fill file path and result folder ")
+            QMessageBox.warning(self, "Lack of information", "You must fill file path and result folder!")
             return
         elif not self.is_manual_file_path_set:
-            QMessageBox.warning(self, "lack of information", "you must fill file path")
+            QMessageBox.warning(self, "Lack of information", "You must fill file path!")
             return
         elif not self.is_manual_folder_result_set:
-            QMessageBox.warning(self, "lack of information", "you must fill result folder")
+            QMessageBox.warning(self, "Lack of information", "You must fill result folder!")
             return
 
         try:
@@ -120,11 +121,11 @@ class MyApp(QMainWindow):
                     file = self.readFilePyDicom()
                     # work with file
                     self.writeFilePyDicom(file)
-                    ow = OutputWindow(
-                        "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-                        "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                        "image_*", "image_*")
-                    ow.create_window()
+                    # ow = OutputWindow(
+                    #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+                    #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+                    #     "image_*", "image_*")
+                    # ow.create_window()
 
                 else:
                     file = self.readFileNifti()
@@ -169,7 +170,7 @@ class MyApp(QMainWindow):
         ow.create_window()
 
     def workingWithFIleError(self):
-        QMessageBox.warning(self, "something went wrong", "we can't work with file!")
+        QMessageBox.warning(self, "Warning", "Problem occurred while working with the file!")
 
 
 if __name__ == "__main__":
@@ -179,5 +180,6 @@ if __name__ == "__main__":
 
     try:
         sys.exit(app.exec_())
-    except:
+    except Exception as e:
+        print(e)
         print('closing window...')

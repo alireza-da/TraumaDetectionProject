@@ -6,7 +6,7 @@ import glob
 
 from PIL import Image, UnidentifiedImageError
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QGridLayout, \
-    QTextEdit
+    QTextEdit, QProgressBar, QMainWindow
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import uic
 from pydicom import read_file, dcmread
@@ -60,8 +60,10 @@ def dicom_to_png(dicom_image, path, filename):
 
 
 def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
+
     patient_files = read_dicom_series(patient_path, patient_filepattern)
     mask_files = read_dicom_series(mask_path, mask_filepattern)
+
     return patient_files, mask_files
 
 
@@ -76,7 +78,9 @@ class OutputWindow:
         self.width = screensize[0]
         self.height = screensize[1]
         self.app = QApplication([])
+        self.app2 = QApplication([])
         self.window = QWidget()
+        self.window.setWindowTitle("Detection")
         self.dicom_image_index = 0
         self.images = read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern)
         self.patient_dicom = self.images[0]
@@ -208,8 +212,8 @@ class OutputWindow:
 
 
 # script to be written when user clicks start
-# if __name__ == "__main__":
-#     ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-#                       "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-#                       "image_*", "image_*")
-#     ow.create_window()
+if __name__ == "__main__":
+    ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+                      "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+                      "image_*", "image_*")
+    ow.create_window()
