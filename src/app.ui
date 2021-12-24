@@ -25,7 +25,7 @@
       <x>20</x>
       <y>250</y>
       <width>901</width>
-      <height>91</height>
+      <height>105</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -61,7 +61,7 @@
              <widget class="QLabel" name="manual_file_path_text">
               <property name="styleSheet">
                <string notr="true">color: #21078E;
-font-size: 10pt;</string>
+font: 10pt &quot;Segoe UI&quot;;</string>
               </property>
               <property name="text">
                <string>select file</string>
@@ -85,7 +85,7 @@ font-size: 10pt;</string>
              <widget class="QLabel" name="manual_result_path_text">
               <property name="styleSheet">
                <string notr="true">color: #21078E;
-font-size: 10pt;</string>
+font: 10pt &quot;Segoe UI&quot;;</string>
               </property>
               <property name="text">
                <string>select folder</string>
@@ -232,7 +232,7 @@ font-size: 10pt;</string>
     <property name="styleSheet">
      <string notr="true">background-color: #000578; color: #FFFFFF ; border-style: outset; 
 padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
-font-size: 12pt;</string>
+font: 14pt &quot;Segoe UI&quot;;font-weight:600; </string>
     </property>
     <property name="text">
      <string>file path</string>
@@ -256,7 +256,7 @@ font-size: 12pt;</string>
     <property name="styleSheet">
      <string notr="true">background-color: #1C0091; color: #FFFFFF ; border-style: outset; 
 padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
-font-size: 12pt</string>
+font: 14pt &quot;Segoe UI&quot;;font-weight:600; </string>
     </property>
     <property name="text">
      <string>result path</string>
@@ -302,7 +302,7 @@ font-size: 12pt</string>
     <property name="styleSheet">
      <string notr="true">background-color:  #30FF8A; border-style: outset; 
 padding: 8px 40px ;  ; border-radius: 20px ; border-color: #21078E;
-font-size: 12pt;color : #21078E;</string>
+font: 14pt &quot;Segoe UI&quot;;color : #21078E;font-weight:600; </string>
     </property>
     <property name="text">
      <string>start</string>
