@@ -64,7 +64,7 @@
 font: 10pt &quot;Segoe UI&quot;;</string>
               </property>
               <property name="text">
-               <string>select file</string>
+               <string>Select File</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -88,7 +88,7 @@ font: 10pt &quot;Segoe UI&quot;;</string>
 font: 10pt &quot;Segoe UI&quot;;</string>
               </property>
               <property name="text">
-               <string>select folder</string>
+               <string>Selected Folder</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -235,7 +235,7 @@ padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
 font: 14pt &quot;Segoe UI&quot;;font-weight:600; </string>
     </property>
     <property name="text">
-     <string>file path</string>
+     <string>Input File</string>
     </property>
    </widget>
    <widget class="QPushButton" name="manual_result_path_button">
@@ -259,7 +259,7 @@ padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
 font: 14pt &quot;Segoe UI&quot;;font-weight:600; </string>
     </property>
     <property name="text">
-     <string>result path</string>
+     <string>Output File</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -305,7 +305,7 @@ padding: 8px 40px ;  ; border-radius: 20px ; border-color: #21078E;
 font: 14pt &quot;Segoe UI&quot;;color : #21078E;font-weight:600; </string>
     </property>
     <property name="text">
-     <string>start</string>
+     <string>Start</string>
     </property>
    </widget>
   </widget>

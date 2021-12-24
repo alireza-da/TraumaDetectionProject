@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHB
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import uic
 from pydicom import read_file, dcmread
-
+from fpdf import FPDF
 
 def read_dicom_series(directory, filepattern="image_*"):
     """ Reads a DICOM Series files in the given directory.
@@ -67,9 +67,8 @@ def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
     return patient_files, mask_files
 
 
-# TODO: 1- add copy to clipboard button
-#       2- add buttons functionality
-#       3- add patient's birthday
+# TODO: 1- add copy to clipboard button (checked)
+#       2- add buttons functionality for history, home, save
 class OutputWindow:
     def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern):
         user32 = ctypes.windll.user32
@@ -78,7 +77,6 @@ class OutputWindow:
         self.width = screensize[0]
         self.height = screensize[1]
         self.app = QApplication([])
-        self.app2 = QApplication([])
         self.window = QWidget()
         self.window.setWindowTitle("Detection")
         self.dicom_image_index = 0
@@ -130,6 +128,7 @@ class OutputWindow:
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
         patient_name = pat_dicom_img.data_element('PatientName').value
+
         dicom_to_png(pat_dicom_img, "temp/images", patient_name)
         pat_image_label = QLabel()
         pat_image = QPixmap(f"temp/images/{patient_name}.png")
@@ -161,11 +160,17 @@ class OutputWindow:
         patient_id_layout.addWidget(pat_id_text)
         patient_details_layout.addLayout(patient_id_layout, 2, 0)
         pat_date_layout = QHBoxLayout()
-        pat_date_layout.addWidget(QLabel("Study Date"))
-        pat_date_text = QTextEdit(str(dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)))
+        pat_date_layout.addWidget(QLabel("Birth Date"))
+        pat_date_text = QTextEdit(str(dicom_date_to_str(pat_dicom_img.data_element("PatientBirthDate").value)))
         pat_date_text.setFixedHeight(30)
         pat_date_layout.addWidget(pat_date_text)
         patient_details_layout.addLayout(pat_date_layout, 3, 0)
+        study_date_layout = QHBoxLayout()
+        study_date_layout.addWidget(QLabel("Study Date"))
+        study_date_text = QTextEdit(str(dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)))
+        study_date_text.setFixedHeight(30)
+        study_date_layout.addWidget(study_date_text)
+        patient_details_layout.addLayout(study_date_layout, 4, 0)
         report_layout.addLayout(patient_details_layout)
         # - detection details
         detection_layout = QVBoxLayout()
@@ -209,6 +214,17 @@ class OutputWindow:
         main_layout.addLayout(main_navbar_layout)
         main_layout.addLayout(bottom_layout)
         self.window.setLayout(main_layout)
+
+    @staticmethod
+    def save(patient_name, patient_id, *args):
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=15)
+        pdf.cell(200, 10, txt="Detection Result", align='C')
+        pdf.cell(200, 10, txt=f"Patient Name {patient_name}", align='L')
+        pdf.cell(200, 10, txt=f"Patient ID {patient_id}", align='L')
+        for cell in args:
+            pdf.cell(200, 10, txt=cell, align='L')
 
 
 # script to be written when user clicks start
