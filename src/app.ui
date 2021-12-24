@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>808</width>
-    <height>491</height>
+    <width>934</width>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#MainWindow{ 
-        background-image: url(&quot;src/assets/background.jpg&quot;);
-        background-repeat: no-repeat; 
-        background-position: center;}
+        background-color: #C9C8C8}
     </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -25,26 +23,34 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>200</y>
-      <width>761</width>
-      <height>221</height>
+      <y>250</y>
+      <width>901</width>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QFrame" name="verticallayout_manual">
        <property name="styleSheet">
-        <string notr="true">#verticallayout_manual {border-width: 1px;
- border-style: solid;
- border-color: black;
- border-radius:10px;
- padding:10px 5px;}</string>
+        <string notr="true"/>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_manual">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="manula_path">
           <property name="leftMargin">
-           <number>10</number>
+           <number>0</number>
           </property>
           <property name="topMargin">
            <number>5</number>
@@ -52,26 +58,16 @@
           <item>
            <layout class="QHBoxLayout" name="manual_file_path">
             <item>
-             <widget class="QPushButton" name="manual_file_path_button">
-              <property name="maximumSize">
-               <size>
-                <width>150</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: #2B5DD1; color: #FFFFFF ; border-style: outset; 
-padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
-              </property>
-              <property name="text">
-               <string>file path</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QLabel" name="manual_file_path_text">
+              <property name="styleSheet">
+               <string notr="true">color: #21078E;
+font-size: 10pt;</string>
+              </property>
               <property name="text">
                <string>select file</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
               <property name="margin">
                <number>10</number>
@@ -86,26 +82,16 @@ padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
              <number>0</number>
             </property>
             <item>
-             <widget class="QPushButton" name="manual_result_path_button">
-              <property name="maximumSize">
-               <size>
-                <width>150</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: #2B5DD1; color: #FFFFFF ; border-style: outset; 
-padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
-              </property>
-              <property name="text">
-               <string>result path</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QLabel" name="manual_result_path_text">
+              <property name="styleSheet">
+               <string notr="true">color: #21078E;
+font-size: 10pt;</string>
+              </property>
               <property name="text">
                <string>select folder</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
               <property name="margin">
                <number>10</number>
@@ -115,23 +101,6 @@ padding: 8px 0px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
            </layout>
           </item>
          </layout>
-        </item>
-        <item alignment="Qt::AlignHCenter">
-         <widget class="QPushButton" name="manual_start">
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: #FF6987; color: #FFFFFF ; border-style: outset; 
-padding: 8px 40px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
-          </property>
-          <property name="text">
-           <string>start</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>
@@ -143,7 +112,7 @@ padding: 8px 40px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>771</width>
+      <width>901</width>
       <height>41</height>
      </rect>
     </property>
@@ -245,13 +214,107 @@ padding: 8px 40px ;  ; border-radius: 10px ; border-color: #2752B8;</string>
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="manual_file_path_button">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>70</y>
+      <width>200</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>200</width>
+      <height>150</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #000578; color: #FFFFFF ; border-style: outset; 
+padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
+font-size: 12pt;</string>
+    </property>
+    <property name="text">
+     <string>file path</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="manual_result_path_button">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>140</y>
+      <width>200</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>200</width>
+      <height>150</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #1C0091; color: #FFFFFF ; border-style: outset; 
+padding: 8px 0px ;  ; border-radius: 20px ; border-color: #2752B8;
+font-size: 12pt</string>
+    </property>
+    <property name="text">
+     <string>result path</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>230</y>
+      <width>961</width>
+      <height>1</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>1</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #ACADA8;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="manual_start">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>370</y>
+      <width>200</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>200</width>
+      <height>150</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:  #30FF8A; border-style: outset; 
+padding: 8px 40px ;  ; border-radius: 20px ; border-color: #21078E;
+font-size: 12pt;color : #21078E;</string>
+    </property>
+    <property name="text">
+     <string>start</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>808</width>
+     <width>934</width>
      <height>26</height>
     </rect>
    </property>
