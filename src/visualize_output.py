@@ -3,14 +3,21 @@ import numpy as np
 import natsort
 import ctypes
 import glob
+import sys
 
+from threading import Thread
 from PIL import Image, UnidentifiedImageError
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QGridLayout, \
-    QTextEdit, QProgressBar, QMainWindow
+    QTextEdit
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import uic
 from pydicom import read_file, dcmread
 from fpdf import FPDF
+
+# importing libraries
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+
 
 def read_dicom_series(directory, filepattern="image_*"):
     """ Reads a DICOM Series files in the given directory.
@@ -60,8 +67,8 @@ def dicom_to_png(dicom_image, path, filename):
 
 
 def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
-
     patient_files = read_dicom_series(patient_path, patient_filepattern)
+
     mask_files = read_dicom_series(mask_path, mask_filepattern)
 
     return patient_files, mask_files
@@ -70,7 +77,7 @@ def read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern):
 # TODO: 1- add copy to clipboard button (checked)
 #       2- add buttons functionality for history, home, save
 class OutputWindow:
-    def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern):
+    def __init__(self, mask_path, patient_path, patient_filepattern, mask_filepattern, output_folder):
         user32 = ctypes.windll.user32
         screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
         self.title = "Report"
@@ -83,6 +90,7 @@ class OutputWindow:
         self.images = read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern)
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
+        self.output_folder = output_folder
 
     def create_window(self):
         self.add_layout()
@@ -108,6 +116,7 @@ class OutputWindow:
         save_icon = QIcon("assets/save.png")
         save_button.setIcon(save_icon)
         save_button.setFlat(True)
+
         navbar_layout.addWidget(save_button)
         exit_button = QPushButton()
         exit_icon = QIcon("assets/log-out.png")
@@ -161,13 +170,16 @@ class OutputWindow:
         patient_details_layout.addLayout(patient_id_layout, 2, 0)
         pat_date_layout = QHBoxLayout()
         pat_date_layout.addWidget(QLabel("Birth Date"))
-        pat_date_text = QTextEdit(str(dicom_date_to_str(pat_dicom_img.data_element("PatientBirthDate").value)))
+        birth_date = dicom_date_to_str(pat_dicom_img.data_element("PatientBirthDate").value)
+        pat_date_text = QTextEdit(str(birth_date))
         pat_date_text.setFixedHeight(30)
         pat_date_layout.addWidget(pat_date_text)
         patient_details_layout.addLayout(pat_date_layout, 3, 0)
         study_date_layout = QHBoxLayout()
         study_date_layout.addWidget(QLabel("Study Date"))
-        study_date_text = QTextEdit(str(dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)))
+        study_date = dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)
+
+        study_date_text = QTextEdit(str(study_date))
         study_date_text.setFixedHeight(30)
         study_date_layout.addWidget(study_date_text)
         patient_details_layout.addLayout(study_date_layout, 4, 0)
@@ -183,8 +195,9 @@ class OutputWindow:
         detection_header_layout.addWidget(cp_button)
         detection_layout.addLayout(detection_header_layout)
         # - model result
-        detection_text = QTextEdit("1- A tumor has been detected in liver.\n 2- A tumor has been detected in liver.\n"
-                                   "Summary: \n Liver has two tumors.")
+        detection = "1- A tumor has been detected in liver.<br>2- A tumor has been detected in liver.<br><br>" \
+                    "Summary: <br> Liver has two tumors."
+        detection_text = QTextEdit(detection)
         detection_text.setFixedHeight(100)
         detection_layout.addWidget(detection_text)
         report_layout.addLayout(detection_layout)
@@ -202,10 +215,16 @@ class OutputWindow:
         cp_button.setFlat(True)
         status_layout_label.addWidget(cp_button)
         status_layout.addLayout(status_layout_label)
-        status_text = QTextEdit("Needs surgery. Needs ICU Reservation.")
+        status = "Needs surgery. <br>Needs ICU Reservation."
+        status_text = QTextEdit(status)
         status_text.setFixedHeight(100)
         status_layout.addWidget(status_text)
         report_layout.addLayout(status_layout)
+        save_button.clicked.connect(
+            lambda: self.save(patient_name, patient_id, {"Study Date": study_date,
+                                                         "Birth Date": birth_date,
+                                                         "Detection": detection,
+                                                         "Status": status}))
         # Main layout of the window
         main_layout = QVBoxLayout()
         bottom_layout = QHBoxLayout()
@@ -215,21 +234,27 @@ class OutputWindow:
         main_layout.addLayout(bottom_layout)
         self.window.setLayout(main_layout)
 
-    @staticmethod
-    def save(patient_name, patient_id, *args):
+    def save(self, patient_name, patient_id, details: dict):
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=15)
-        pdf.cell(200, 10, txt="Detection Result", align='C')
-        pdf.cell(200, 10, txt=f"Patient Name {patient_name}", align='L')
-        pdf.cell(200, 10, txt=f"Patient ID {patient_id}", align='L')
-        for cell in args:
-            pdf.cell(200, 10, txt=cell, align='L')
+
+        pdf.cell(200, 10, txt="Detection Result", ln=1, align='C')
+        pdf.cell(200, 10, txt=f"Patient Name: {patient_name}", ln=2, align='C')
+        pdf.cell(200, 10, txt=f"Patient ID: {patient_id}", ln=3, align='C')
+        ln_c = 4
+        for cell in details.keys():
+            pdf.cell(200, 5, txt=f"{cell}: {details[cell]}", ln=ln_c, align='C')
+            ln_c += 1
+        pdf.cell(200, 5, txt=f"", ln=ln_c, align='C')
+        pdf.image(name="temp/images/liver_17^patient_mask.png")
+        pdf.output(dest='F', name=f"{self.output_folder}{patient_name}_{patient_id}.pdf")
 
 
 # script to be written when user clicks start
 if __name__ == "__main__":
     ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-                      "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                      "image_*", "image_*")
+                      # "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+                      "C:\\Users\\rasta\\Downloads\\liver 6\\liver 6\\^95020329_20210906",
+                      "FILE*", "image_*", "test/output_folder/")
     ow.create_window()
