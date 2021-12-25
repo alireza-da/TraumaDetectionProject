@@ -41,10 +41,28 @@ class Installation:
                     except:
                         print("failed to create temp dir")
 
-
                     print(f"Application Installed Successfully at {self.installation_path}/app")
             else:
                 print("Error: administrator permission needed, rerun the program with administrative rights")
 
         if self.os_name == "linux":
-            pass
+            installation_code = os.system(f"pyinstaller --hidden-import pydicom.encoders.gdcm "
+                                          f"-p assets "
+                                          f"--add-data app.ui;{self.installation_path}/ "
+                                          # f"--icon=assets/logo.ico "
+                                          f"--hidden-import pydicom.encoders.pylibjpeg --onefile {self.python_script} "
+                                          f"--distpath {self.installation_path}")
+            if installation_code == 0:
+                try:
+                    shutil.copyfile("app.ui", f"{self.installation_path}/app.ui")
+                    shutil.copytree("assets", f"{self.installation_path}/assets")
+                except shutil.SameFileError:
+                    print("Config Files already exist")
+                try:
+                    os.makedirs(f"{self.installation_path}/temp")
+                    os.makedirs(f"{self.installation_path}/temp/images")
+
+                except:
+                    print("failed to create temp dir")
+
+                print(f"Application Installed Successfully at {self.installation_path}/app")
