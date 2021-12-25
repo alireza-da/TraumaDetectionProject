@@ -195,7 +195,7 @@ class OutputWindow:
         detection_header_layout.addWidget(cp_button)
         detection_layout.addLayout(detection_header_layout)
         # - model result
-        detection = "1- A tumor has been detected in liver.<br>2- A tumor has been detected in liver.<br><br>" \
+        detection = "1- A tumor has been detected in liver.<br> 2- A tumor has been detected in liver. <br><br> " \
                     "Summary: <br> Liver has two tumors."
         detection_text = QTextEdit(detection)
         detection_text.setFixedHeight(100)
