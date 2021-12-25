@@ -5,4 +5,4 @@ python:
 scripts:
 - mkdir app
 - cd src
-- sudo python installation_cli.py --os-name linux --path ../app/
+- sudo python installation_cli.py --os-name linux --path ../app
