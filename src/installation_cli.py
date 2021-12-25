@@ -1,6 +1,6 @@
 import click
 from installation import Installation
-import pydicom
+import logging
 
 
 @click.command()
@@ -8,7 +8,7 @@ import pydicom
                                                    "lowercase letters e.g. windows, linux, mac")
 @click.option('--path', default=".", help="Installation Path")
 def os(os_name, path):
-    print(f"Installing Package on {os_name}")
+    logging.info(f"Installing Package on {os_name}")
     install = Installation(os_name, path, "app.py")
     install.install()
 

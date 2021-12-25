@@ -2,6 +2,7 @@ import ctypes
 import os
 import shutil
 import sys
+import logging
 
 
 class Installation:
@@ -17,7 +18,8 @@ class Installation:
             def is_admin():
                 try:
                     return ctypes.windll.shell32.IsUserAnAdmin()
-                except:
+                except Exception as ex:
+                    logging.error(ex)
                     return False
 
             if not is_admin():
@@ -32,18 +34,19 @@ class Installation:
                     try:
                         shutil.copyfile("app.ui", f"{self.installation_path}/app.ui")
                         shutil.copytree("assets", f"{self.installation_path}/assets")
-                    except shutil.SameFileError:
-                        print("Config Files already exist")
+                    except (shutil.SameFileError, FileExistsError):
+                        logging.info("Config Files already exist")
                     try:
                         os.makedirs(f"{self.installation_path}/temp")
                         os.makedirs(f"{self.installation_path}/temp/images")
 
-                    except:
-                        print("failed to create temp dir")
+                    except (FileExistsError, FileNotFoundError) as e:
+                        logging.error(e)
+                        logging.info("Failed to create temp dir")
 
-                    print(f"Application Installed Successfully at {self.installation_path}/app")
+                    logging.info(f"Application Installed Successfully at {self.installation_path}/app")
             else:
-                print("Error: administrator permission needed, rerun the program with administrative rights")
+                logging.error("Error: administrator permission needed, rerun the program with administrative rights")
 
         if self.os_name == "linux":
             installation_code = os.system(f"pyinstaller --hidden-import pydicom.encoders.gdcm "
@@ -56,13 +59,14 @@ class Installation:
                 try:
                     shutil.copyfile("app.ui", f"{self.installation_path}/app.ui")
                     shutil.copytree("assets", f"{self.installation_path}/assets")
-                except shutil.SameFileError:
-                    print("Config Files already exist")
+                except (shutil.SameFileError, FileExistsError):
+                    logging.info("Config Files already exist")
                 try:
                     os.makedirs(f"{self.installation_path}/temp")
                     os.makedirs(f"{self.installation_path}/temp/images")
 
-                except:
-                    print("failed to create temp dir")
+                except FileExistsError as e:
+                    logging.error(e)
+                    logging.info("Failed to create temp dir")
 
                 print(f"Application Installed Successfully at {self.installation_path}/app")
