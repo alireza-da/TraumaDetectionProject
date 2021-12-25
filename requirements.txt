@@ -19,7 +19,6 @@ opencv-python==4.5.4.60
 packaging==21.3
 pefile==2021.9.3
 Pillow==8.4.0
-py2exe==0.11.0.1
 pydicom==2.2.2
 pyinstaller==4.7
 pyinstaller-hooks-contrib==2021.4
