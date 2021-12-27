@@ -1,0 +1,2 @@
+from src.visualize_output import OutputWindow
+assert OutputWindow

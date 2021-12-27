@@ -46,8 +46,6 @@ def read_dicom_series(directory, filepattern="image_*", target_list=None):
     return target_list
 
 
-
-
 def dicom_date_to_str(date):
     year = date[0:4]
     month = date[4:6]
@@ -139,10 +137,28 @@ class OutputWindow:
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
         patient_name = pat_dicom_img.data_element('PatientName').value
-
+        # Dicom Viewer Section
+        dicom_viewer_layout = QVBoxLayout()
+        dicom_viewer_layout.addWidget(QLabel("Dicom Preview"))
+        dicom_images_widget = QWidget()
+        dicom_images_widget.setStyleSheet("background-color: grey;")
+        dicom_images_layout = QVBoxLayout(dicom_images_widget)
+        dicom_to_png(pat_dicom_img, "temp/images", patient_name)
+        pat_image_label = QLabel()
+        pat_image = QPixmap(f"temp/images/{patient_name}.png")
+        pat_image_label.setPixmap(pat_image)
+        dicom_images_layout.addWidget(pat_image_label)
+        # - model result
+        mask_image_label = QLabel()
+        mask_dicom_img = self.mask_dicom[10]
+        dicom_to_png(mask_dicom_img, "temp/images", f"{patient_name}_mask")
+        mask_image = QPixmap(f"temp/images/{pat_dicom_img.data_element('PatientName').value}_mask.png")
+        mask_image_label.setPixmap(mask_image)
+        dicom_images_layout.addWidget(mask_image_label)
+        dicom_viewer_layout.addWidget(dicom_images_widget)
         # Report Section
-        # report_layout = QVBoxLayout()
-        # report_layout.addWidget(QLabel("Report"))
+        report_layout = QVBoxLayout()
+        report_layout.addWidget(QLabel("Report"))
         # - patient details
         patient_details_layout = QGridLayout()
         patient_details_layout.addWidget(QLabel("Patient Details"), 0, 0)
@@ -173,89 +189,89 @@ class OutputWindow:
         study_date_text.setFixedHeight(30)
         study_date_layout.addWidget(study_date_text)
         patient_details_layout.addLayout(study_date_layout, 4, 0)
-        # report_layout.addLayout(patient_details_layout)
+        report_layout.addLayout(patient_details_layout)
         # - detection details
-        # detection_layout = QVBoxLayout()
-        # detection_header_layout = QHBoxLayout()
-        # detection_header_layout.addWidget(QLabel("Detection"))
-        # cp_button = QPushButton()
-        # cp_icon = QIcon("assets/copy.png")
-        # cp_button.setIcon(cp_icon)
-        # cp_button.setFlat(True)
-        # detection_header_layout.addWidget(cp_button)
-        # detection_layout.addLayout(detection_header_layout)
-        # # - model result
-        # detection = "1- A tumor has been detected in liver.<br> 2- A tumor has been detected in liver. <br><br> " \
-        #             "Summary: <br> Liver has two tumors."
-        # detection_text = QTextEdit(detection)
-        # detection_text.setFixedHeight(100)
-        # detection_layout.addWidget(detection_text)
-        # report_layout.addLayout(detection_layout)
+        detection_layout = QVBoxLayout()
+        detection_header_layout = QHBoxLayout()
+        detection_header_layout.addWidget(QLabel("Detection"))
+        cp_button = QPushButton()
+        cp_icon = QIcon("assets/copy.png")
+        cp_button.setIcon(cp_icon)
+        cp_button.setFlat(True)
+        detection_header_layout.addWidget(cp_button)
+        detection_layout.addLayout(detection_header_layout)
+        # - model result
+        detection = "1- A tumor has been detected in liver.<br> 2- A tumor has been detected in liver. <br><br> " \
+                    "Summary: <br> Liver has two tumors."
+        detection_text = QTextEdit(detection)
+        detection_text.setFixedHeight(100)
+        detection_layout.addWidget(detection_text)
+        report_layout.addLayout(detection_layout)
         # - status
-        # status_layout = QVBoxLayout()
-        # status_layout_label = QHBoxLayout()
-        # status_layout_label.addWidget(QLabel("Status"))
-        # status_image_label = QLabel()
-        # status_image = QPixmap("assets/red_circle.png")
-        # status_image_label.setPixmap(status_image)
-        # status_layout_label.addWidget(status_image_label)
-        # cp_button = QPushButton()
-        # cp_icon = QIcon("assets/copy.png")
-        # cp_button.setIcon(cp_icon)
-        # cp_button.setFlat(True)
-        # status_layout_label.addWidget(cp_button)
-        # status_layout.addLayout(status_layout_label)
-        # status = "Needs surgery. <br>Needs ICU Reservation."
-        # status_text = QTextEdit(status)
-        # status_text.setFixedHeight(100)
-        # status_layout.addWidget(status_text)
-        # report_layout.addLayout(status_layout)
+        status_layout = QVBoxLayout()
+        status_layout_label = QHBoxLayout()
+        status_layout_label.addWidget(QLabel("Status"))
+        status_image_label = QLabel()
+        status_image = QPixmap("assets/red_circle.png")
+        status_image_label.setPixmap(status_image)
+        status_layout_label.addWidget(status_image_label)
+        cp_button = QPushButton()
+        cp_icon = QIcon("assets/copy.png")
+        cp_button.setIcon(cp_icon)
+        cp_button.setFlat(True)
+        status_layout_label.addWidget(cp_button)
+        status_layout.addLayout(status_layout_label)
+        status = "Needs surgery. <br>Needs ICU Reservation."
+        status_text = QTextEdit(status)
+        status_text.setFixedHeight(100)
+        status_layout.addWidget(status_text)
+        report_layout.addLayout(status_layout)
         # Report List
-        report_layout = QHBoxLayout()
-        report_table = QTableWidget()
-        report_layout.addWidget(report_table)
-        cols = ["Organ", "Grader", "Detection"]
-        rows = [["Liver", 4, "Tumor"], ["Bladder", 2, "Tumor"], ["Kidneys", 0, "-"], ["Lung", 4, "Tumor"],
-                ["Stomach", 4, "Tumor"], ["Intestines", 1, "Tumor"], ["Liver", 3, "Tumor"], ["Liver", 0, "-"],
-                ["Liver", 4, "Tumor"], ["Liver", 5, "Tumor"]]
-
-        report_table.setRowCount(10)
-        report_table.setColumnCount(len(cols))
-        report_table.setHorizontalHeaderLabels(cols)
-
-        # setting output model data in the table
-        for column in range(len(cols)):
-            for row in range(len(rows)):
-                grade = rows[row][1]
-                if column == 2:
-                    last_col_widget = QWidget()
-                    last_col_widget.setStyleSheet("{width: 100%;}")
-                    last_col_layout = QHBoxLayout()
-                    last_col_widget.setLayout(last_col_layout)
-                    last_col_layout.addWidget(QLabel(str(rows[row][column])))
-                    preview_button = QPushButton()
-                    preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
-                                                                              self.mask_dicom[10], patient_name))
-                    eye_img = QIcon("assets/eye.png")
-                    preview_button.setIcon(eye_img)
-                    preview_button.setFlat(True)
-                    last_col_layout.addWidget(preview_button)
-                    report_table.setCellWidget(row, column, last_col_widget)
-                    self.set_widget_background(last_col_widget, grade)
-                else:
-                    item = QTableWidgetItem(str(rows[row][column]))
-                    # changing color of each row based on its grade
-                    self.set_item_background(item, grade)
-                    report_table.setItem(row, column, item)  # your contents
+        # report_layout = QHBoxLayout()
+        # report_table = QTableWidget()
+        # report_layout.addWidget(report_table)
+        # cols = ["Organ", "Grader", "Detection"]
+        # rows = [["Liver", 4, "Tumor"], ["Bladder", 2, "Tumor"], ["Kidneys", 0, "-"], ["Lung", 4, "Tumor"],
+        #         ["Stomach", 4, "Tumor"], ["Intestines", 1, "Tumor"], ["Liver", 3, "Tumor"], ["Liver", 0, "-"],
+        #         ["Liver", 4, "Tumor"], ["Liver", 5, "Tumor"]]
+        #
+        # report_table.setRowCount(10)
+        # report_table.setColumnCount(len(cols))
+        # report_table.setHorizontalHeaderLabels(cols)
+        #
+        # # setting output model data in the table
+        # for column in range(len(cols)):
+        #     for row in range(len(rows)):
+        #         grade = rows[row][1]
+        #         if column == 2:
+        #             last_col_widget = QWidget()
+        #             last_col_widget.setStyleSheet("{width: 100%;}")
+        #             last_col_layout = QHBoxLayout()
+        #             last_col_widget.setLayout(last_col_layout)
+        #             last_col_layout.addWidget(QLabel(str(rows[row][column])))
+        #             preview_button = QPushButton()
+        #             preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
+        #                                                                       self.mask_dicom[10], patient_name))
+        #             eye_img = QIcon("assets/eye.png")
+        #             preview_button.setIcon(eye_img)
+        #             preview_button.setFlat(True)
+        #             last_col_layout.addWidget(preview_button)
+        #             report_table.setCellWidget(row, column, last_col_widget)
+        #             self.set_widget_background(last_col_widget, grade)
+        #         else:
+        #             item = QTableWidgetItem(str(rows[row][column]))
+        #             # changing color of each row based on its grade
+        #             self.set_item_background(item, grade)
+        #             report_table.setItem(row, column, item)  # your contents
         save_button.clicked.connect(
             lambda: self.save(patient_name, patient_id, {"Study Date": study_date,
                                                          "Birth Date": birth_date}))
         # Main layout of the window
         main_layout = QVBoxLayout()
         bottom_layout = QHBoxLayout()
-        # bottom_layout.addLayout(dicom_viewer_layout)
+        bottom_layout.addLayout(dicom_viewer_layout)
         bottom_layout.addLayout(patient_details_layout)
-        # bottom_layout.addLayout(report_layout)
+        bottom_layout.addLayout(report_layout)
         main_layout.addLayout(main_navbar_layout)
         main_layout.addLayout(bottom_layout)
         main_layout.addLayout(report_layout)
