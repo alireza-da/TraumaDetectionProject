@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QCheckBox
 from PyQt5 import uic, QtGui, QtCore
 from functools import partial
 from DicomFileHandler import DicomHandler as dH
