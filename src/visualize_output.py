@@ -213,6 +213,8 @@ class OutputWindow:
         # Report List
         report_layout = QHBoxLayout()
         report_table = QTableWidget()
+        report_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        report_table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         report_layout.addWidget(report_table)
         cols = ["Organ", "Grader", "Detection"]
         rows = [["Liver", 4, "Tumor"], ["Bladder", 2, "Tumor"], ["Kidneys", 0, "-"], ["Lung", 4, "Tumor"],
@@ -229,7 +231,6 @@ class OutputWindow:
                 grade = rows[row][1]
                 if column == 2:
                     last_col_widget = QWidget()
-                    last_col_widget.setStyleSheet("{width: 100%;}")
                     last_col_layout = QHBoxLayout()
                     last_col_widget.setLayout(last_col_layout)
                     last_col_layout.addWidget(QLabel(str(rows[row][column])))
