@@ -164,8 +164,8 @@ class MyApp(QMainWindow):
     def workWithFileDone(self):
         QMessageBox.information(self, "Information", "File Saved, Started the Detection")
         ow = OutputWindow(
-            "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-            "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+            os.getcwd()+"\\MASKS_DICOM\\liver",
+            os.getcwd()+"\\PATIENT_DICOM",
             "image_*", "image_*", "test/output_folder")
         ow.create_window()
 

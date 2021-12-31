@@ -111,23 +111,23 @@ class OutputWindow:
         container = QWidget()
         navbar_layout = QHBoxLayout(container)
         home_button = QPushButton('')
-        home_icon = QIcon("assets/home.png")
+        home_icon = QIcon("./src/assets/home.png")
         home_button.setIcon(home_icon)
         home_button.setFlat(True)
         navbar_layout.addWidget(home_button)
         history_button = QPushButton()
-        history_icon = QIcon("assets/history.png")
+        history_icon = QIcon("./src/assets/history.png")
         history_button.setIcon(history_icon)
         history_button.setFlat(True)
         navbar_layout.addWidget(history_button)
         save_button = QPushButton()
-        save_icon = QIcon("assets/save.png")
+        save_icon = QIcon("./src/assets/save.png")
         save_button.setIcon(save_icon)
         save_button.setFlat(True)
 
         navbar_layout.addWidget(save_button)
         exit_button = QPushButton()
-        exit_icon = QIcon("assets/log-out.png")
+        exit_icon = QIcon("./src/assets/log-out.png")
         exit_button.setIcon(exit_icon)
         exit_button.setFlat(True)
         exit_button.clicked.connect(lambda: self.window.close())
@@ -236,7 +236,7 @@ class OutputWindow:
                     preview_button = QPushButton()
                     preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
                                                                               self.mask_dicom[10], patient_name))
-                    eye_img = QIcon("assets/eye.png")
+                    eye_img = QIcon("./src/assets/eye.png")
                     preview_button.setIcon(eye_img)
                     preview_button.setFlat(True)
                     last_col_layout.addWidget(preview_button)
@@ -319,8 +319,10 @@ class OutputWindow:
 
 # script to be written when user clicks start
 if __name__ == "__main__":
-    ow = OutputWindow("C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+    print(os.getcwd()+"\\MASKS_DICOM\\liver")
+    print(os.getcwd()+"\\liver 6\\^95020329_20210906")
+    ow = OutputWindow(os.getcwd()+"\\MASKS_DICOM\\liver",
                       # "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                      "C:\\Users\\rasta\\Downloads\\liver 6\\liver 6\\^95020329_20210906",
+                      os.getcwd()+"\\liver 6\\^95020329_20210906",
                       "FILE*", "image_*", "test/output_folder/")
     ow.create_window()
