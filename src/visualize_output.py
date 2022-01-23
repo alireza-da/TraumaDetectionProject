@@ -46,8 +46,6 @@ def read_dicom_series(directory, filepattern="image_*", target_list=None):
     return target_list
 
 
-
-
 def dicom_date_to_str(date):
     year = date[0:4]
     month = date[4:6]
@@ -99,6 +97,8 @@ class OutputWindow:
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
         self.output_folder = output_folder
+        self.algorithms = {"Lung Detection": 1, "River Trauma Detection 1": 1, "River Trauma Detection 2": 1,
+                           "River Trauma Detection 3": 1, "Heart Maximized Algorithm": 0, "Brain Scan": 0}
 
     def create_window(self):
         self.add_layout()
@@ -106,28 +106,40 @@ class OutputWindow:
         self.window.show()
         self.app.exec_()
 
+    def toggle_algorithm_status(self, algorithm: QListWidgetItem, unchecked, checked):
+        key = algorithm.text()
+        if self.algorithms[key] == 1:
+            checked.takeItem(checked.currentRow())
+            algorithm.setBackground(QColor("#DAF58D"))
+            unchecked.addItem(algorithm)
+            self.algorithms[key] = 0
+        else:
+            unchecked.takeItem(unchecked.currentRow())
+            algorithm.setBackground(QColor("#8DF5C1"))
+            checked.addItem(algorithm)
+            self.algorithms[key] = 1
+
     def add_layout(self):
         # Top Bar Layout
         container = QWidget()
         navbar_layout = QHBoxLayout(container)
         home_button = QPushButton('')
-        home_icon = QIcon("./src/assets/home.png")
+        home_icon = QIcon("assets/home.png")
         home_button.setIcon(home_icon)
         home_button.setFlat(True)
         navbar_layout.addWidget(home_button)
         history_button = QPushButton()
-        history_icon = QIcon("./src/assets/history.png")
+        history_icon = QIcon("assets/history.png")
         history_button.setIcon(history_icon)
         history_button.setFlat(True)
         navbar_layout.addWidget(history_button)
         save_button = QPushButton()
-        save_icon = QIcon("./src/assets/save.png")
+        save_icon = QIcon("assets/save.png")
         save_button.setIcon(save_icon)
         save_button.setFlat(True)
-
         navbar_layout.addWidget(save_button)
         exit_button = QPushButton()
-        exit_icon = QIcon("./src/assets/log-out.png")
+        exit_icon = QIcon("assets/log-out.png")
         exit_button.setIcon(exit_icon)
         exit_button.setFlat(True)
         exit_button.clicked.connect(lambda: self.window.close())
@@ -139,10 +151,17 @@ class OutputWindow:
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
         patient_name = pat_dicom_img.data_element('PatientName').value
-
-        # Report Section
-        # report_layout = QVBoxLayout()
-        # report_layout.addWidget(QLabel("Report"))
+        info_layout = QHBoxLayout()
+        # - execution buttons
+        exec_layout = QHBoxLayout()
+        export_button = QPushButton()
+        export_icon = QIcon("assets/export.png")
+        export_button.setIcon(export_icon)
+        exec_layout.addWidget(export_button)
+        exec_button = QPushButton()
+        exec_icon = QIcon("assets/round-play-button.png")
+        exec_button.setIcon(exec_icon)
+        exec_layout.addWidget(exec_button)
         # - patient details
         patient_details_layout = QGridLayout()
         patient_details_layout.addWidget(QLabel("Patient Details"), 0, 0)
@@ -168,58 +187,58 @@ class OutputWindow:
         study_date_layout = QHBoxLayout()
         study_date_layout.addWidget(QLabel("Study Date"))
         study_date = dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)
-
         study_date_text = QTextEdit(str(study_date))
         study_date_text.setFixedHeight(30)
         study_date_layout.addWidget(study_date_text)
         patient_details_layout.addLayout(study_date_layout, 4, 0)
-        # report_layout.addLayout(patient_details_layout)
-        # - detection details
-        # detection_layout = QVBoxLayout()
-        # detection_header_layout = QHBoxLayout()
-        # detection_header_layout.addWidget(QLabel("Detection"))
-        # cp_button = QPushButton()
-        # cp_icon = QIcon("assets/copy.png")
-        # cp_button.setIcon(cp_icon)
-        # cp_button.setFlat(True)
-        # detection_header_layout.addWidget(cp_button)
-        # detection_layout.addLayout(detection_header_layout)
-        # # - model result
-        # detection = "1- A tumor has been detected in liver.<br> 2- A tumor has been detected in liver. <br><br> " \
-        #             "Summary: <br> Liver has two tumors."
-        # detection_text = QTextEdit(detection)
-        # detection_text.setFixedHeight(100)
-        # detection_layout.addWidget(detection_text)
-        # report_layout.addLayout(detection_layout)
-        # - status
-        # status_layout = QVBoxLayout()
-        # status_layout_label = QHBoxLayout()
-        # status_layout_label.addWidget(QLabel("Status"))
-        # status_image_label = QLabel()
-        # status_image = QPixmap("assets/red_circle.png")
-        # status_image_label.setPixmap(status_image)
-        # status_layout_label.addWidget(status_image_label)
-        # cp_button = QPushButton()
-        # cp_icon = QIcon("assets/copy.png")
-        # cp_button.setIcon(cp_icon)
-        # cp_button.setFlat(True)
-        # status_layout_label.addWidget(cp_button)
-        # status_layout.addLayout(status_layout_label)
-        # status = "Needs surgery. <br>Needs ICU Reservation."
-        # status_text = QTextEdit(status)
-        # status_text.setFixedHeight(100)
-        # status_layout.addWidget(status_text)
-        # report_layout.addLayout(status_layout)
-        # Report List
+        info_layout.addLayout(patient_details_layout)
+        # - Study Description
+        study_description_layout = QVBoxLayout()
+        study_description_layout.addWidget(QLabel("Study Description"))
+        study_description_layout.addWidget(QTextEdit())
+        info_layout.addLayout(study_description_layout)
+        # - Algorithms Checklist
+        algorithms_layout = QVBoxLayout()
+        algorithms_layout.addWidget(QLabel("Used Algorithms"))
+        checked_algorithms_list = QListWidget()
+        checked_algorithms_list.setDragEnabled(True)
+        checked_algorithms_list.setAcceptDrops(True)
+        checked_algorithms_list.setDragDropOverwriteMode(True)
+        checked_algorithms_list.itemClicked.connect(lambda item1: self.toggle_algorithm_status(
+                                                                                            item1,
+                                                                                            unchecked_algorithms_list,
+                                                                                            checked_algorithms_list))
+        algorithms_layout.addWidget(checked_algorithms_list)
+        algorithms_layout.addWidget(QLabel("Unused Algorithms"))
+        unchecked_algorithms_list = QListWidget()
+        unchecked_algorithms_list.setAcceptDrops(True)
+        unchecked_algorithms_list.setDragEnabled(True)
+        unchecked_algorithms_list.itemClicked.connect(lambda item1: self.toggle_algorithm_status(
+                                                                                            item1,
+                                                                                            unchecked_algorithms_list,
+                                                                                            checked_algorithms_list))
+
+        algorithms_layout.addWidget(unchecked_algorithms_list)
+        info_layout.addLayout(algorithms_layout)
+        for key in self.algorithms.keys():
+            item = QListWidgetItem(key)
+            if self.algorithms[key] == 1:
+                item.setBackground(QColor("#8DF5C1"))
+                checked_algorithms_list.addItem(item)
+            elif self.algorithms[key] == 0:
+                item.setBackground(QColor("#DAF58D"))
+                unchecked_algorithms_list.addItem(item)
+        # - Report List
         report_layout = QHBoxLayout()
         report_table = QTableWidget()
         report_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         report_table.verticalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
         report_layout.addWidget(report_table)
-        cols = ["Organ", "Grader", "Detection"]
-        rows = [["Liver", 4, "Tumor"], ["Bladder", 2, "Tumor"], ["Kidneys", 0, "-"], ["Lung", 4, "Tumor"],
-                ["Stomach", 4, "Tumor"], ["Intestines", 1, "Tumor"], ["Liver", 3, "Tumor"], ["Liver", 0, "-"],
-                ["Liver", 4, "Tumor"], ["Liver", 5, "Tumor"]]
+        cols = ["Organ", "Detection"]
+        rows = [["Liver", 4, "Abnormal"], ["Bladder", 2, "Abnormal"], ["Kidneys", 0, "Normal"], ["Lung", 4, "Abnormal"],
+                ["Stomach", 4, "Abnormal"], ["Intestines", 1, "Abnormal"], ["Liver", 3, "Abnormal"],
+                ["Liver", 0, "Normal"],
+                ["Liver", 4, "Abnormal"], ["Liver", 5, "Abnormal"]]
 
         report_table.setRowCount(10)
         report_table.setColumnCount(len(cols))
@@ -229,15 +248,16 @@ class OutputWindow:
         for column in range(len(cols)):
             for row in range(len(rows)):
                 grade = rows[row][1]
-                if column == 2:
+                detection = rows[row][2]
+                if column == 1:
                     last_col_widget = QWidget()
                     last_col_layout = QHBoxLayout()
                     last_col_widget.setLayout(last_col_layout)
-                    last_col_layout.addWidget(QLabel(str(rows[row][column])))
+                    last_col_layout.addWidget(QLabel(str(detection)))
                     preview_button = QPushButton()
                     preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
                                                                               self.mask_dicom[10], patient_name))
-                    eye_img = QIcon("./src/assets/eye.png")
+                    eye_img = QIcon("assets/eye.png")
                     preview_button.setIcon(eye_img)
                     preview_button.setFlat(True)
                     last_col_layout.addWidget(preview_button)
@@ -255,9 +275,10 @@ class OutputWindow:
         main_layout = QVBoxLayout()
         bottom_layout = QHBoxLayout()
         # bottom_layout.addLayout(dicom_viewer_layout)
-        bottom_layout.addLayout(patient_details_layout)
+        bottom_layout.addLayout(info_layout)
         # bottom_layout.addLayout(report_layout)
         main_layout.addLayout(main_navbar_layout)
+        main_layout.addLayout(exec_layout)
         main_layout.addLayout(bottom_layout)
         main_layout.addLayout(report_layout)
         self.window.setLayout(main_layout)
@@ -301,29 +322,30 @@ class OutputWindow:
 
     @staticmethod
     def set_item_background(item, grade):
+        red_color = QColor('#F58D8D')
+        green_color = QColor("#8DF5C1")
         if grade > 1:
-            item.setBackground(QColor(255, 0, 0))
+            item.setBackground(red_color)
         elif grade == 1:
-            item.setBackground(QColor(255, 255, 0))
+            item.setBackground(red_color)
         else:
-            item.setBackground(QColor(0, 255, 0))
+            item.setBackground(green_color)
 
     @staticmethod
     def set_widget_background(item, grade):
         if grade > 1:
-            item.setStyleSheet("background-color: red;")
+            item.setStyleSheet("background-color: #F58D8D;")
         elif grade == 1:
-            item.setStyleSheet("background-color: rgb(255, 255, 0);")
+            item.setStyleSheet("background-color: #F58D8D;")
         else:
-            item.setStyleSheet("background-color: rgb(0, 255, 0);")
+            item.setStyleSheet("background-color: #8DF5C1;")
 
 
 # script to be written when user clicks start
 if __name__ == "__main__":
-    print(os.getcwd()+"\\MASKS_DICOM\\liver")
-    print(os.getcwd()+"\\liver 6\\^95020329_20210906")
-    ow = OutputWindow(os.getcwd()+"\\MASKS_DICOM\\liver",
-                      # "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                      os.getcwd()+"\\liver 6\\^95020329_20210906",
+    print(os.getcwd() + "\\MASKS_DICOM\\liver")
+    print(os.getcwd() + "\\liver 6\\^95020329_20210906")
+    ow = OutputWindow(os.getcwd() + "\\..\\MASKS_DICOM\\liver",
+                      os.getcwd() + "\\..\\liver 6\\^95020329_20210906",
                       "FILE*", "image_*", "test/output_folder/")
     ow.create_window()

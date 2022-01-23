@@ -9,9 +9,11 @@ from PIL import Image, UnidentifiedImageError
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QHBoxLayout, QLabel, QGridLayout, \
     QTextEdit, QTableWidget
 from PyQt5.QtGui import QPixmap, QIcon, QColor
+from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from pydicom import read_file, dcmread
 from fpdf import FPDF
+from History import History
 
 # importing libraries
 from PyQt5.QtWidgets import *
@@ -97,12 +99,19 @@ class OutputWindow:
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
         self.output_folder = output_folder
+        self.hs = None
 
     def create_window(self):
         self.add_layout()
         self.window.showMaximized()
         self.window.show()
         self.app.exec_()
+
+    def goto_history(self):
+        if not self.hs:
+            self.hs = History()
+        self.hs.show()
+        self.window.close()
 
     def add_layout(self):
         # Top Bar Layout
@@ -117,6 +126,7 @@ class OutputWindow:
         history_icon = QIcon("assets/history.png")
         history_button.setIcon(history_icon)
         history_button.setFlat(True)
+        history_button.clicked.connect(self.goto_history)
         navbar_layout.addWidget(history_button)
         save_button = QPushButton()
         save_icon = QIcon("assets/save.png")
@@ -133,7 +143,6 @@ class OutputWindow:
         container.setStyleSheet("background-color: grey;")
         main_navbar_layout = QVBoxLayout()
         main_navbar_layout.addWidget(container)
-
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
         patient_name = pat_dicom_img.data_element('PatientName').value
@@ -156,6 +165,19 @@ class OutputWindow:
         mask_image_label.setPixmap(mask_image)
         dicom_images_layout.addWidget(mask_image_label)
         dicom_viewer_layout.addWidget(dicom_images_widget)
+        image_nav_layout = QHBoxLayout()
+        prev_button = QPushButton()
+        prev_icon = QIcon("assets/left-arrow.png")
+        prev_button.setIcon(prev_icon)
+        image_nav_layout.addWidget(prev_button)
+        gallery_info_label = QLabel("1 of 20")
+        gallery_info_label.setAlignment(Qt.AlignCenter)
+        image_nav_layout.addWidget(gallery_info_label)
+        next_button = QPushButton()
+        next_icon = QIcon("assets/right-arrow.png")
+        next_button.setIcon(next_icon)
+        image_nav_layout.addWidget(next_button)
+        dicom_viewer_layout.addLayout(image_nav_layout)
         # Report Section
         report_layout = QVBoxLayout()
         report_layout.addWidget(QLabel("Report"))
@@ -184,7 +206,6 @@ class OutputWindow:
         study_date_layout = QHBoxLayout()
         study_date_layout.addWidget(QLabel("Study Date"))
         study_date = dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)
-
         study_date_text = QTextEdit(str(study_date))
         study_date_text.setFixedHeight(30)
         study_date_layout.addWidget(study_date_text)
@@ -221,7 +242,7 @@ class OutputWindow:
         cp_button.setFlat(True)
         status_layout_label.addWidget(cp_button)
         status_layout.addLayout(status_layout_label)
-        status = "Needs surgery. <br>Needs ICU Reservation."
+        status = "Abnormal"
         status_text = QTextEdit(status)
         status_text.setFixedHeight(100)
         status_layout.addWidget(status_text)
