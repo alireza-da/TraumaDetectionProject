@@ -159,7 +159,7 @@ background-color:#DED9D9</string>
             <enum>QLayout::SetMinimumSize</enum>
            </property>
            <property name="leftMargin">
-            <number>10</number>
+            <number>0</number>
            </property>
            <property name="spacing">
             <number>0</number>
@@ -207,6 +207,9 @@ font-size:8pt;
              </property>
              <property name="text">
               <string>patient name</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
              </property>
              <property name="margin">
               <number>0</number>
@@ -386,7 +389,7 @@ font-size:8pt;</string>
       <x>10</x>
       <y>420</y>
       <width>1201</width>
-      <height>381</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="styleSheet">
