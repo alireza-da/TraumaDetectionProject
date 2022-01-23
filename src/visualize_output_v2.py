@@ -13,6 +13,7 @@ from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from pydicom import read_file, dcmread
 from fpdf import FPDF
+from History import History
 
 # importing libraries
 from PyQt5.QtWidgets import *
@@ -98,12 +99,19 @@ class OutputWindow:
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
         self.output_folder = output_folder
+        self.hs = None
 
     def create_window(self):
         self.add_layout()
         self.window.showMaximized()
         self.window.show()
         self.app.exec_()
+
+    def goto_history(self):
+        if not self.hs:
+            self.hs = History()
+        self.hs.show()
+        self.window.close()
 
     def add_layout(self):
         # Top Bar Layout
@@ -118,6 +126,7 @@ class OutputWindow:
         history_icon = QIcon("assets/history.png")
         history_button.setIcon(history_icon)
         history_button.setFlat(True)
+        history_button.clicked.connect(self.goto_history)
         navbar_layout.addWidget(history_button)
         save_button = QPushButton()
         save_icon = QIcon("assets/save.png")

@@ -257,7 +257,6 @@ class OutputWindow:
                     preview_button = QPushButton()
                     preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
                                                                               self.mask_dicom[10], patient_name))
-
                     eye_img = QIcon("assets/eye.png")
                     preview_button.setIcon(eye_img)
                     preview_button.setFlat(True)
