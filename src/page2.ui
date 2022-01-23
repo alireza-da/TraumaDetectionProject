@@ -146,7 +146,7 @@ background-color:#DED9D9</string>
  font-weight:500;</string>
            </property>
            <property name="text">
-            <string> patient details</string>
+            <string> Patient Details</string>
            </property>
            <property name="margin">
             <number>5</number>
@@ -178,7 +178,7 @@ font-size:8pt;
 </string>
              </property>
              <property name="text">
-              <string>patient id</string>
+              <string>Patient ID</string>
              </property>
             </widget>
            </item>
@@ -206,7 +206,7 @@ font-size:8pt;
 </string>
              </property>
              <property name="text">
-              <string>patient name</string>
+              <string>Patient Name</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -239,7 +239,7 @@ font-size:8pt;
 font-size:8pt;</string>
              </property>
              <property name="text">
-              <string>birth date</string>
+              <string>Birth Date</string>
              </property>
              <property name="margin">
               <number>0</number>
@@ -273,7 +273,7 @@ font-size:8pt;</string>
  font-weight:500;</string>
              </property>
              <property name="text">
-              <string>Study description</string>
+              <string>Study Description</string>
              </property>
              <property name="margin">
               <number>5</number>
@@ -302,7 +302,7 @@ font-size:8pt;</string>
  font-weight:500;</string>
            </property>
            <property name="text">
-            <string>used algorithm</string>
+            <string>Used Algorithm</string>
            </property>
            <property name="margin">
             <number>5</number>
@@ -329,7 +329,7 @@ font-size:8pt;</string>
  font-weight:500;</string>
            </property>
            <property name="text">
-            <string>unused algorithm</string>
+            <string>Unused Algorithm</string>
            </property>
            <property name="margin">
             <number>5</number>
@@ -401,7 +401,7 @@ text-align:center;
     </property>
     <column>
      <property name="text">
-      <string>organs</string>
+      <string>Organs</string>
      </property>
     </column>
     <column>
