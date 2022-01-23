@@ -1,47 +1,56 @@
+from fileinput import close
 import sys
 import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem,QPushButton
 from PyQt5 import uic, QtGui, QtCore
 
-class MyApp(QMainWindow):
+from History import History
+from app import MyApp
+
+class Page2(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
         # print(os.listdir())
         uic.loadUi('./src/page2.ui', self)
         self.setButton()
         self.setTable()
+        self.setAlgorithmList()
+        self.historyApp = None
+        self.MyApp = None
+
+    def setAlgorithmList(self):
+        self.list_used_algo.addItems(["first","second"])
+        self.list_unused_algo.addItems(["third"])
+
 
     def setTable(self):
         width = self.table.frameGeometry().width()
         col0_size = 300
-        col1_size = 200
-        col3_size = 40
-        col2_size = width - (col0_size + col1_size + col3_size) - 30
+        col2_size = 200
+        col1_size = width - (col0_size  + col2_size) - 30
         self.table.setColumnWidth(0,col0_size)
         self.table.setColumnWidth(1,col1_size)
         self.table.setColumnWidth(2,col2_size)
-        self.table.setColumnWidth(3,col3_size)
         
         self.addRows()
 
     def addRows(self):
-        rows = [{"organs":"something1","grade":"1","detection":"somewhere1"},
-        {"organs":"something2","grade":"2","detection":"somewhere2"},
-        {"organs":"something3","grade":"3","detection":"somewhere3"}]
+        rows = [{"organs":"something1","detection":"somewhere1"},
+        {"organs":"something2","detection":"somewhere2"},
+        {"organs":"something3","detection":"somewhere3"}]
 
 
         self.table.setRowCount(len(rows))
         for index,row in enumerate(rows):
             self.table.setItem(index,0, QTableWidgetItem(row["organs"]))
-            self.table.setItem(index,1, QTableWidgetItem(row["grade"]))
-            self.table.setItem(index,2, QTableWidgetItem(row["detection"]))
+            self.table.setItem(index,1, QTableWidgetItem(row["detection"]))
             btn = QPushButton('')
             btn.setIcon(QtGui.QIcon('./src/assets/eye.png'))
             btn.setIconSize(QtCore.QSize(12, 12))
             btn.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-            self.table.setCellWidget(index,3,btn)
-            for i in range(0,4):
-                if i == 3 :
+            self.table.setCellWidget(index,2,btn)
+            for i in range(0,3):
+                if i == 2 :
                     btn.setStyleSheet(self.getBackgroundColortext(index))
                     continue
                 self.table.item(index, i).setBackground(self.getRGBcolor(index))
@@ -73,12 +82,12 @@ class MyApp(QMainWindow):
         self.home_button.setIcon(QtGui.QIcon('./src/assets/home.png'))
         self.home_button.setIconSize(QtCore.QSize(24, 24))
         self.home_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        #self.home_button.clicked.connect(self.homePress)
+        self.home_button.clicked.connect(self.homePress)
 
         self.history_button.setIcon(QtGui.QIcon('./src/assets/history.png'))
         self.history_button.setIconSize(QtCore.QSize(24, 24))
         self.history_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        #self.history_button.clicked.connect(self.historyPress)
+        self.history_button.clicked.connect(self.historyPress)
 
         self.exit_button.setIcon(QtGui.QIcon('./src/assets/log-out.png'))
         self.exit_button.setIconSize(QtCore.QSize(24, 24))
@@ -98,11 +107,21 @@ class MyApp(QMainWindow):
         self.ok_button.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         #self.ok_button.clicked.connect(self.historyPress)
 
-
+    def historyPress(self):
+        if self.historyApp == None:
+            self.historyApp = History()
+        self.historyApp.show()
+        self.close()
+    
+    def homePress(self):
+        if self.MyApp == None:
+            self.MyApp = MyApp(False)
+        self.MyApp.show()
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    gui = MyApp(False)
+    gui = Page2(False)
     gui.show()
 
     try:
