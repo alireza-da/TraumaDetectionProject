@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1090</width>
-    <height>712</height>
+    <width>1218</width>
+    <height>854</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      <rect>
       <x>0</x>
       <y>-1</y>
-      <width>1091</width>
+      <width>1221</width>
       <height>61</height>
      </rect>
     </property>
@@ -123,200 +123,221 @@ background-color:#DED9D9</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
-      <width>1071</width>
-      <height>141</height>
+      <y>110</y>
+      <width>1201</width>
+      <height>301</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label_10">
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>40</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font-size:9pt;
- font-weight:500;</string>
-       </property>
-       <property name="text">
-        <string> Report</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_4">
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>40</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font-size:9pt;
- font-weight:500;</string>
-       </property>
-       <property name="text">
-        <string> patient details</string>
-       </property>
-       <property name="margin">
-        <number>5</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,2,3">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,0">
        <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMinimumSize</enum>
-         </property>
-         <property name="leftMargin">
-          <number>10</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_5">
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,1">
+         <item>
+          <widget class="QLabel" name="label_4">
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>28</height>
+             <width>160</width>
+             <height>40</height>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true"> margin: 5px; 
- font-size:8pt;
-</string>
+            <string notr="true">font-size:9pt;
+ font-weight:500;</string>
            </property>
            <property name="text">
-            <string>patient name</string>
+            <string> patient details</string>
+           </property>
+           <property name="margin">
+            <number>5</number>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QTextEdit" name="textEdit">
-           <property name="maximumSize">
-            <size>
-             <width>250</width>
-             <height>28</height>
-            </size>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
            </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>32</height>
-            </size>
+           <property name="leftMargin">
+            <number>0</number>
            </property>
-           <property name="styleSheet">
-            <string notr="true"> margin: 5px; 
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"> margin: 5px; 
 font-size:8pt;
 </string>
-           </property>
-           <property name="text">
-            <string>patient id</string>
-           </property>
-          </widget>
+             </property>
+             <property name="text">
+              <string>patient id</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTextEdit" name="textEdit_2">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>28</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>32</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"> margin: 5px; 
+ font-size:8pt;
+</string>
+             </property>
+             <property name="text">
+              <string>patient name</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QTextEdit" name="textEdit">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>28</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>28</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"> margin: 5px; 
+font-size:8pt;</string>
+             </property>
+             <property name="text">
+              <string>birth date</string>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QTextEdit" name="textEdit_3">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>28</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
-         <item row="1" column="1">
-          <widget class="QTextEdit" name="textEdit_2">
-           <property name="maximumSize">
-            <size>
-             <width>250</width>
-             <height>28</height>
-            </size>
-           </property>
-          </widget>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="maximumSize">
+              <size>
+               <width>160</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font-size:9pt;
+ font-weight:500;</string>
+             </property>
+             <property name="text">
+              <string>Study description</string>
+             </property>
+             <property name="margin">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTextBrowser" name="textBrowser"/>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="sizeConstraint">
-          <enum>QLayout::SetMinimumSize</enum>
-         </property>
-         <property name="rightMargin">
-          <number>10</number>
-         </property>
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_7">
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_11">
            <property name="maximumSize">
             <size>
-             <width>16777215</width>
-             <height>28</height>
+             <width>160</width>
+             <height>40</height>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true"> margin: 5px; 
-font-size:8pt;</string>
+            <string notr="true">font-size:9pt;
+ font-weight:500;</string>
            </property>
            <property name="text">
-            <string>birth date</string>
+            <string>used algorithm</string>
            </property>
            <property name="margin">
-            <number>0</number>
+            <number>5</number>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QTextEdit" name="textEdit_3">
-           <property name="maximumSize">
-            <size>
-             <width>250</width>
-             <height>28</height>
-            </size>
-           </property>
-          </widget>
+         <item>
+          <widget class="QListWidget" name="list_used_algo"/>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_8">
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_10">
            <property name="maximumSize">
             <size>
-             <width>100</width>
-             <height>32</height>
+             <width>160</width>
+             <height>40</height>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true"> margin: 5px; 
- font-size:8pt;</string>
+            <string notr="true">font-size:9pt;
+ font-weight:500;</string>
            </property>
            <property name="text">
-            <string>study</string>
+            <string>unused algorithm</string>
+           </property>
+           <property name="margin">
+            <number>5</number>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QTextEdit" name="textEdit_4">
-           <property name="maximumSize">
-            <size>
-             <width>250</width>
-             <height>28</height>
-            </size>
-           </property>
-          </widget>
+         <item>
+          <widget class="QListWidget" name="list_unused_algo"/>
          </item>
         </layout>
        </item>
@@ -327,8 +348,8 @@ font-size:8pt;</string>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>70</y>
+      <x>1120</x>
+      <y>60</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -366,9 +387,9 @@ font-size:8pt;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>230</y>
-      <width>1071</width>
-      <height>451</height>
+      <y>420</y>
+      <width>1201</width>
+      <height>411</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -385,12 +406,7 @@ text-align:center;
     </column>
     <column>
      <property name="text">
-      <string>grade</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>detection</string>
+      <string>Status</string>
      </property>
     </column>
     <column>
@@ -405,7 +421,7 @@ text-align:center;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1090</width>
+     <width>1218</width>
      <height>26</height>
     </rect>
    </property>

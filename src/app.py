@@ -12,7 +12,7 @@ class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
         # print(os.listdir())
-        uic.loadUi('app.ui', self)
+        uic.loadUi('./src/app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
         self.manual_start.clicked.connect(self.workWithFile)
@@ -27,6 +27,8 @@ class MyApp(QMainWindow):
         self.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
 
         self.setUpSidePageButton()
+        self.historyApp = None
+        self.thePage2 = None
 
     def setUpSidePageButton(self):
 
@@ -59,7 +61,11 @@ class MyApp(QMainWindow):
         pass
 
     def historyPress(self):
-        pass
+        from History import History
+        if self.historyApp == None:
+            self.historyApp = History()
+        self.historyApp.show()
+        self.close()
 
     @staticmethod
     def helpPress(self):
@@ -142,6 +148,17 @@ class MyApp(QMainWindow):
             print(e)
             self.workingWithFIleError()
 
+        self.goToPage2()
+        
+    def goToPage2(self):
+        from page2 import Page2
+
+        if self.thePage2 == None:
+            self.thePage2 = Page2(False)
+        self.thePage2.show()
+        self.close()
+
+
     def readFilePyDicom(self):
 
         file, self.file_name = dH.readDicomPydicom(self.manual_file_path_text.text())
@@ -171,6 +188,11 @@ class MyApp(QMainWindow):
 
     def workingWithFIleError(self):
         QMessageBox.warning(self, "Warning", "Problem occurred while working with the file!")
+
+
+        
+    
+    
 
 
 if __name__ == "__main__":
