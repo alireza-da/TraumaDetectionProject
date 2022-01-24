@@ -62,7 +62,7 @@ class MyApp(QMainWindow):
 
     def historyPress(self):
         from History import History
-        if self.historyApp == None:
+        if self.historyApp is None:
             self.historyApp = History()
         self.historyApp.show()
         self.close()
@@ -149,15 +149,16 @@ class MyApp(QMainWindow):
             self.workingWithFIleError()
 
         self.goToPage2()
-        
+
     def goToPage2(self):
         from page2 import Page2
-
-        if self.thePage2 == None:
-            self.thePage2 = Page2(False)
+        if self.thePage2 is None:
+            self.thePage2 = Page2(False,
+                                  os.getcwd() + "\\..\\MASKS_DICOM\\liver",
+                                  os.getcwd() + "\\..\\PATIENT_DICOM",
+                                  "image_*", "image_*", "test/output_folder")
         self.thePage2.show()
         self.close()
-
 
     def readFilePyDicom(self):
 
@@ -180,19 +181,15 @@ class MyApp(QMainWindow):
 
     def workWithFileDone(self):
         QMessageBox.information(self, "Information", "File Saved, Started the Detection")
-        ow = OutputWindow(
-            os.getcwd()+"\\MASKS_DICOM\\liver",
-            os.getcwd()+"\\PATIENT_DICOM",
-            "image_*", "image_*", "test/output_folder")
-        ow.create_window()
+        self.goToPage2()
+        # ow = OutputWindow(
+        #     os.getcwd() + "\\..\\MASKS_DICOM\\liver",
+        #     os.getcwd() + "\\..\\PATIENT_DICOM",
+        #     "image_*", "image_*", "test/output_folder")
+        # ow.create_window()
 
     def workingWithFIleError(self):
         QMessageBox.warning(self, "Warning", "Problem occurred while working with the file!")
-
-
-        
-    
-    
 
 
 if __name__ == "__main__":
