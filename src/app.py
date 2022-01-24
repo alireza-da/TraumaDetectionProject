@@ -5,13 +5,12 @@ from PyQt5 import uic, QtGui, QtCore
 from functools import partial
 from DicomFileHandler import DicomHandler as dH
 import Type as tP
-from visualize_output import OutputWindow
 
 
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        # print(os.listdir())
+        print(os.listdir())
         uic.loadUi('app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
@@ -24,7 +23,7 @@ class MyApp(QMainWindow):
         self.isReadFileMode = isReadFileMode
 
         self.setWindowTitle("Trauma")
-        self.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
+        self.setWindowIcon(QtGui.QIcon("assets/logo.png"))
 
         self.setUpSidePageButton()
         self.historyApp = None
@@ -32,27 +31,27 @@ class MyApp(QMainWindow):
 
     def setUpSidePageButton(self):
 
-        self.logo_home.setIcon(QtGui.QIcon('./src/assets/home.png'))
+        self.logo_home.setIcon(QtGui.QIcon('assets/home.png'))
         self.logo_home.setIconSize(QtCore.QSize(24, 24))
         self.logo_home.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_home.clicked.connect(self.homePress)
 
-        self.logo_history.setIcon(QtGui.QIcon('./src/assets/history.png'))
+        self.logo_history.setIcon(QtGui.QIcon('assets/history.png'))
         self.logo_history.setIconSize(QtCore.QSize(24, 24))
         self.logo_history.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_history.clicked.connect(self.historyPress)
 
-        self.logo_back.setIcon(QtGui.QIcon('./src/assets/log-out.png'))
+        self.logo_back.setIcon(QtGui.QIcon('assets/log-out.png'))
         self.logo_back.setIconSize(QtCore.QSize(24, 24))
         self.logo_back.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_back.clicked.connect(self.close)
 
-        self.logo_help.setIcon(QtGui.QIcon('./src/assets/help.png'))
+        self.logo_help.setIcon(QtGui.QIcon('assets/help.png'))
         self.logo_help.setIconSize(QtCore.QSize(24, 24))
         self.logo_help.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_help.clicked.connect(self.helpPress)
 
-        self.logo_email.setIcon(QtGui.QIcon('./src/assets/email.png'))
+        self.logo_email.setIcon(QtGui.QIcon('assets/email.png'))
         self.logo_email.setIconSize(QtCore.QSize(24, 24))
         self.logo_email.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
         self.logo_email.clicked.connect(self.emailPress)
@@ -70,7 +69,7 @@ class MyApp(QMainWindow):
     @staticmethod
     def helpPress(self):
         msgBox = QMessageBox()
-        msgBox.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
+        msgBox.setWindowIcon(QtGui.QIcon("assets/logo.png"))
         msgBox.setText("1.something \n2.something \n3.something\n                                            ")
         msgBox.setWindowTitle("help")
         msgBox.setFixedWidth(600)
@@ -79,7 +78,7 @@ class MyApp(QMainWindow):
     @staticmethod
     def emailPress(self):
         msgBox = QMessageBox()
-        msgBox.setWindowIcon(QtGui.QIcon("./src/assets/logo.png"))
+        msgBox.setWindowIcon(QtGui.QIcon("assets/logo.png"))
         msgBox.setText("email\nphone\naddress\n                                            ")
         msgBox.setWindowTitle("contact")
         msgBox.setFixedWidth(600)
@@ -193,6 +192,7 @@ class MyApp(QMainWindow):
 
 
 if __name__ == "__main__":
+    print("hello")
     app = QApplication(sys.argv)
     gui = MyApp(False)
     gui.show()

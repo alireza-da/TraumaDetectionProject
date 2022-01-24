@@ -33,6 +33,8 @@ class Installation:
                 if installation_code == 0:
                     try:
                         shutil.copyfile("app.ui", f"{self.installation_path}/app.ui")
+                        shutil.copyfile("page2.ui", f"{self.installation_path}/page2.ui")
+                        shutil.copyfile("history.ui", f"{self.installation_path}/history.ui")
                         shutil.copytree("assets", f"{self.installation_path}/assets")
                     except (shutil.SameFileError, FileExistsError):
                         logging.info("Config Files already exist")
@@ -58,6 +60,8 @@ class Installation:
             if installation_code == 0:
                 try:
                     shutil.copyfile("app.ui", f"{self.installation_path}/app.ui")
+                    shutil.copyfile("page2.ui", f"{self.installation_path}/page2.ui")
+                    shutil.copyfile("history.ui", f"{self.installation_path}/history.ui")
                     shutil.copytree("assets", f"{self.installation_path}/assets")
                 except (shutil.SameFileError, FileExistsError):
                     logging.info("Config Files already exist")

@@ -28,9 +28,9 @@ class Page2(QMainWindow):
         self.patient_id = self.patient_dicom[0].data_element("PatientID").value
         self.patient_bd = dicom_date_to_str(self.patient_dicom[0].data_element("PatientBirthDate").value)
         self.rows = []
-        self.rows_copy = [{"organs": "Liver", "grade": 1, "detection": "Abnormal"},
-                          {"organs": "Lung", "grade": 2, "detection": "Abnormal"},
-                          {"organs": "Heart", "grade": 0, "detection": "Normal"}]
+        self.rows_copy = [{"organ": "Liver", "grade": 1, "status": "Abnormal"},
+                          {"organ": "Lung", "grade": 2, "status": "Abnormal"},
+                          {"organ": "Heart", "grade": 0, "status": "Normal"}]
         super().__init__()
         # print(os.listdir())
         uic.loadUi('page2.ui', self)
@@ -155,10 +155,12 @@ class Page2(QMainWindow):
         for _ in self.rows_copy:
             is_remove = randint(0, 2)
             index = randint(0, len(self.rows_copy) - 1)
-            if is_remove == 1 and len(self.rows) > 1:
+            if is_remove == 1 and len(self.rows) > 1 and index < len(self.rows):
                 self.rows.remove(self.rows[index])
             if is_remove == 0:
                 self.rows.append(self.rows_copy[index])
+            # if len(self.rows) == 2:
+            #     self.rows.append(self.rows_copy[index])
         # sleep(200)
 
         self.setCursor(QCursor(QtCore.Qt.CursorShape.ArrowCursor))
@@ -166,63 +168,64 @@ class Page2(QMainWindow):
         self.addRows()
 
     def addRows(self):
-        cols = ["Organ", "Status"]
+        cols = ["Organ", "Status", "Preview"]
         self.table.clear()
         self.table.setRowCount(len(self.rows))
-
-        # for column in range(len(cols) + 1):
-        #     for row in range(len(self.rows)):
-        #         grade = self.rows[row]["grade"]
-        #         detection = self.rows[row]["detection"]
-        #         if column == 2:
-        #             last_col_widget = QWidget()
-        #             last_col_layout = QHBoxLayout()
-        #             last_col_widget.setLayout(last_col_layout)
-        #             last_col_layout.addWidget(QLabel(str(detection)))
-        #             preview_button = QPushButton()
-        #             pat_dicom_img = self.patient_dicom[0]
-        #             patient_name = pat_dicom_img.data_element('PatientName').value
-        #             preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
-        #                                                                       self.mask_dicom[10], patient_name
-        #                                                                       , self.rows[row]["organs"]))
-        #             eye_img = QIcon("assets/eye.png")
-        #             preview_button.setIcon(eye_img)
-        #             preview_button.setFlat(True)
-        #             last_col_layout.addWidget(preview_button)
-        #             self.table.setCellWidget(row, column, last_col_widget)
-        #             self.set_widget_background(last_col_widget, grade)
-        #         else:
-        #             item = QTableWidgetItem(str(self.rows[row][]))
-        #             # changing color of each row based on its grade
-        #             self.set_item_background(item, grade)
-        #             self.setItem(row, column, item)  # your contents
-
-        for index, row in enumerate(self.rows):
-            print(row)
-            self.table.setItem(index, 0, QTableWidgetItem(row["organs"]))
-            self.table.setItem(index, 1, QTableWidgetItem(row["detection"]))
-            last_col_widget = QWidget()
-            last_col_layout = QHBoxLayout()
-            last_col_widget.setLayout(last_col_layout)
-            btn = QPushButton('')
-            btn.setIcon(QtGui.QIcon('assets/eye.png'))
-            btn.setFlat(True)
-            pat_dicom_img = self.patient_dicom[0]
-            patient_name = pat_dicom_img.data_element('PatientName').value
-            btn.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
-                                                           self.mask_dicom[10], patient_name, row["organs"]))
-
-            last_col_layout.addWidget(btn)
-            self.table.setCellWidget(index, 2, last_col_widget)
-
-            for i in range(0, 3):
-                grade = row["grade"]
-                if i == 2:
+        self.table.setHorizontalHeaderLabels(cols)
+        for column in cols:
+            for row in range(len(self.rows)):
+                grade = self.rows[row]["grade"]
+                status = self.rows[row]["status"]
+                col_ind = cols.index(column)
+                if column == "Preview":
+                    last_col_widget = QWidget()
+                    last_col_layout = QHBoxLayout()
+                    last_col_widget.setLayout(last_col_layout)
+                    # last_col_layout.addWidget(QLabel(str(status)))
+                    preview_button = QPushButton()
+                    pat_dicom_img = self.patient_dicom[0]
+                    patient_name = pat_dicom_img.data_element('PatientName').value
+                    preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
+                                                                              self.mask_dicom[10], patient_name
+                                                                              , self.rows[row]["organs"]))
+                    eye_img = QIcon("assets/eye.png")
+                    preview_button.setIcon(eye_img)
+                    preview_button.setFlat(True)
+                    last_col_layout.addWidget(preview_button)
+                    self.table.setCellWidget(row, col_ind, last_col_widget)
                     self.set_widget_background(last_col_widget, grade)
-                    continue
+                else:
+                    item = QTableWidgetItem(str(self.rows[row][column.lower()]))
+                    # changing color of each row based on its grade
+                    self.set_item_background(item, grade)
+                    self.table.setItem(row, col_ind, item)  # your contents
 
-                self.table.item(index, i).setBackground(self.getRGBcolor(grade))
-                self.table.item(index, i).setTextAlignment(QtCore.Qt.AlignCenter)
+        # for index, row in enumerate(self.rows):
+        #     # print(index, row)
+        #     self.table.setItem(index, 0, QTableWidgetItem(row["organs"]))
+        #     self.table.setItem(index, 1, QTableWidgetItem(row["status"]))
+        #     last_col_widget = QWidget()
+        #     last_col_layout = QHBoxLayout()
+        #     last_col_widget.setLayout(last_col_layout)
+        #     btn = QPushButton('')
+        #     btn.setIcon(QtGui.QIcon('assets/eye.png'))
+        #     btn.setFlat(True)
+        #     pat_dicom_img = self.patient_dicom[0]
+        #     patient_name = pat_dicom_img.data_element('PatientName').value
+        #     btn.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
+        #                                                    self.mask_dicom[10], patient_name, row["organs"]))
+        #
+        #     last_col_layout.addWidget(btn)
+        #     self.table.setCellWidget(index, 2, last_col_widget)
+        #
+        #     for i in range(0, 3):
+        #         grade = row["grade"]
+        #         if i == 2:
+        #             self.set_widget_background(last_col_widget, grade)
+        #             continue
+        #         print(i, index, len(self.rows))
+        #         self.table.item(index, i).setBackground(self.getRGBcolor(grade))
+        #         self.table.item(index, i).setTextAlignment(QtCore.Qt.AlignCenter)
 
     @staticmethod
     def set_item_background(item, grade):
