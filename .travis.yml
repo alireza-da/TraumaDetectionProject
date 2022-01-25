@@ -6,4 +6,4 @@ scripts:
 - mkdir app
 - ./venv/Scripts/activate
 - cd src
-- sudo python3 installation_cli.py --os-name linux --path ../app
+- python Type.py
