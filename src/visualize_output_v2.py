@@ -14,6 +14,7 @@ from PyQt5 import uic
 from pydicom import read_file, dcmread
 from fpdf import FPDF
 from History import History
+from random import randint
 
 # importing libraries
 from PyQt5.QtWidgets import *
@@ -94,14 +95,17 @@ class OutputWindow:
         self.app = QApplication([])
         self.window = QWidget()
         self.window.setWindowTitle("Detection")
-        self.dicom_image_index = 0
+        self.window.setWindowIcon(QIcon("assets/logo.png"))
         self.images = read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern)
         self.patient_dicom = self.images[0]
+        self.dicom_image_index = randint(0, len(self.patient_dicom)-1)
         self.mask_dicom = self.images[1]
         self.output_folder = output_folder
         self.hs = None
 
     def create_window(self):
+        self.window = QWidget()
+        self.window.setWindowTitle("Detection")
         self.add_layout()
         self.window.showMaximized()
         self.window.show()
@@ -111,6 +115,10 @@ class OutputWindow:
         if not self.hs:
             self.hs = History()
         self.hs.show()
+        self.window.close()
+
+    def close(self):
+        self.window.deleteLater()
         self.window.close()
 
     def add_layout(self):
@@ -138,11 +146,12 @@ class OutputWindow:
         exit_icon = QIcon("assets/log-out.png")
         exit_button.setIcon(exit_icon)
         exit_button.setFlat(True)
-        exit_button.clicked.connect(lambda: self.window.close())
+        exit_button.clicked.connect(self.close)
         navbar_layout.addWidget(exit_button)
         container.setStyleSheet("background-color: grey;")
         main_navbar_layout = QVBoxLayout()
         main_navbar_layout.addWidget(container)
+        self.dicom_image_index = randint(0, len(self.patient_dicom)-1)
         pat_dicom_img = self.patient_dicom[self.dicom_image_index]
         patient_id = pat_dicom_img.data_element("PatientID").value
         patient_name = pat_dicom_img.data_element('PatientName').value
@@ -159,9 +168,13 @@ class OutputWindow:
         dicom_images_layout.addWidget(pat_image_label)
         # - model result
         mask_image_label = QLabel()
-        mask_dicom_img = self.mask_dicom[10]
+        index = randint(0, len(self.mask_dicom)-1)
+        mask_dicom_img = self.mask_dicom[index]
         dicom_to_png(mask_dicom_img, "temp/images", f"{patient_name}_mask")
-        mask_image = QPixmap(f"temp/images/{pat_dicom_img.data_element('PatientName').value}_mask.png")
+
+        mask_image = QPixmap(f"temp/images/{patient_name}_mask.png")
+        mask_image_label.setPixmap(mask_image)
+        mask_image_label.clear()
         mask_image_label.setPixmap(mask_image)
         dicom_images_layout.addWidget(mask_image_label)
         dicom_viewer_layout.addWidget(dicom_images_widget)
@@ -187,6 +200,8 @@ class OutputWindow:
         patient_name_layout = QHBoxLayout()
         patient_name_layout.addWidget(QLabel("Patient Name"))
         pat_name_text = QTextEdit(str(pat_dicom_img.data_element("PatientName").value))
+        pat_name_text.setFixedWidth(1200)
+        pat_name_text.setAlignment(Qt.AlignLeft)
         pat_name_text.setFixedHeight(30)
         patient_name_layout.addWidget(pat_name_text)
         patient_details_layout.addLayout(patient_name_layout, 1, 0)
@@ -194,6 +209,8 @@ class OutputWindow:
         patient_id_layout.addWidget(QLabel("Patient ID"))
         pat_id_text = QTextEdit(str(patient_id))
         pat_id_text.setFixedHeight(30)
+        pat_id_text.setFixedWidth(1200)
+        pat_id_text.setAlignment(Qt.AlignLeft)
         patient_id_layout.addWidget(pat_id_text)
         patient_details_layout.addLayout(patient_id_layout, 2, 0)
         pat_date_layout = QHBoxLayout()
@@ -201,6 +218,8 @@ class OutputWindow:
         birth_date = dicom_date_to_str(pat_dicom_img.data_element("PatientBirthDate").value)
         pat_date_text = QTextEdit(str(birth_date))
         pat_date_text.setFixedHeight(30)
+        pat_date_text.setFixedWidth(1200)
+        pat_date_text.setAlignment(Qt.AlignLeft)
         pat_date_layout.addWidget(pat_date_text)
         patient_details_layout.addLayout(pat_date_layout, 3, 0)
         study_date_layout = QHBoxLayout()
@@ -208,6 +227,8 @@ class OutputWindow:
         study_date = dicom_date_to_str(pat_dicom_img.data_element("StudyDate").value)
         study_date_text = QTextEdit(str(study_date))
         study_date_text.setFixedHeight(30)
+        study_date_text.setFixedWidth(1200)
+        study_date_text.setAlignment(Qt.AlignLeft)
         study_date_layout.addWidget(study_date_text)
         patient_details_layout.addLayout(study_date_layout, 4, 0)
         report_layout.addLayout(patient_details_layout)
@@ -247,43 +268,7 @@ class OutputWindow:
         status_text.setFixedHeight(100)
         status_layout.addWidget(status_text)
         report_layout.addLayout(status_layout)
-        # Report List
-        # report_layout = QHBoxLayout()
-        # report_table = QTableWidget()
-        # report_layout.addWidget(report_table)
-        # cols = ["Organ", "Grader", "Detection"]
-        # rows = [["Liver", 4, "Tumor"], ["Bladder", 2, "Tumor"], ["Kidneys", 0, "-"], ["Lung", 4, "Tumor"],
-        #         ["Stomach", 4, "Tumor"], ["Intestines", 1, "Tumor"], ["Liver", 3, "Tumor"], ["Liver", 0, "-"],
-        #         ["Liver", 4, "Tumor"], ["Liver", 5, "Tumor"]]
-        #
-        # report_table.setRowCount(10)
-        # report_table.setColumnCount(len(cols))
-        # report_table.setHorizontalHeaderLabels(cols)
-        #
-        # # setting output model data in the table
-        # for column in range(len(cols)):
-        #     for row in range(len(rows)):
-        #         grade = rows[row][1]
-        #         if column == 2:
-        #             last_col_widget = QWidget()
-        #             last_col_widget.setStyleSheet("{width: 100%;}")
-        #             last_col_layout = QHBoxLayout()
-        #             last_col_widget.setLayout(last_col_layout)
-        #             last_col_layout.addWidget(QLabel(str(rows[row][column])))
-        #             preview_button = QPushButton()
-        #             preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
-        #                                                                       self.mask_dicom[10], patient_name))
-        #             eye_img = QIcon("assets/eye.png")
-        #             preview_button.setIcon(eye_img)
-        #             preview_button.setFlat(True)
-        #             last_col_layout.addWidget(preview_button)
-        #             report_table.setCellWidget(row, column, last_col_widget)
-        #             self.set_widget_background(last_col_widget, grade)
-        #         else:
-        #             item = QTableWidgetItem(str(rows[row][column]))
-        #             # changing color of each row based on its grade
-        #             self.set_item_background(item, grade)
-        #             report_table.setItem(row, column, item)  # your contents
+
         save_button.clicked.connect(
             lambda: self.save(patient_name, patient_id, {"Study Date": study_date,
                                                          "Birth Date": birth_date}))

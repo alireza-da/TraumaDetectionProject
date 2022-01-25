@@ -12,13 +12,17 @@ from History import History
 from app import MyApp
 from random import randint
 from visualize_output_v2 import OutputWindow
-from time import sleep
 
 
 class Page2(QMainWindow):
     def __init__(self, isReadFileMode, mask_path, patient_path, patient_filepattern, mask_filepattern, output_folder):
+        self.mask_path = mask_path
+        self.patient_path = patient_path
+        self.patient_filepattern = patient_filepattern
+        self.mask_filepattern = mask_filepattern
         self.images = read_dicom(mask_path, patient_path, patient_filepattern, mask_filepattern)
-        self.outputWindow = OutputWindow(mask_path, patient_path, patient_filepattern, mask_filepattern, output_folder)
+        self.outputWindow = OutputWindow(mask_path, patient_path,
+                                         patient_filepattern, mask_filepattern, output_folder)
         self.patient_dicom = self.images[0]
         self.mask_dicom = self.images[1]
         self.output_folder = output_folder
@@ -31,15 +35,18 @@ class Page2(QMainWindow):
         self.rows_copy = [{"organ": "Liver", "grade": 1, "status": "Abnormal"},
                           {"organ": "Lung", "grade": 2, "status": "Abnormal"},
                           {"organ": "Heart", "grade": 0, "status": "Normal"}]
+
         super().__init__()
         # print(os.listdir())
+
         uic.loadUi('page2.ui', self)
         self.setButton()
         self.setTable()
         self.setAlgorithmList()
         self.setPatientDetails()
         self.textBrowser.setText("Heart - Lung - Liver")
-
+        self.setWindowTitle("Trauma")
+        self.setWindowIcon(QtGui.QIcon("assets/logo.png"))
         self.historyApp = None
         self.MyApp = None
 
@@ -62,7 +69,7 @@ class Page2(QMainWindow):
             ln_c += 1
         pdf.cell(200, 5, txt=f"", ln=ln_c, align='C')
         pdf.image(name="temp/images/liver_17^patient_mask.png")
-        pdf.output(dest='F', name=f"{self.output_folder}{self.patient_name}_{self.patient_id}.pdf")
+        pdf.output(dest='F', name=f"{self.output_folder}/{self.patient_name}_{self.patient_id}.pdf")
 
     def toggle_algorithm_status(self, algorithm: QListWidgetItem, unchecked, checked):
         key = algorithm.text()
@@ -159,12 +166,16 @@ class Page2(QMainWindow):
                 self.rows.remove(self.rows[index])
             if is_remove == 0:
                 self.rows.append(self.rows_copy[index])
-            # if len(self.rows) == 2:
-            #     self.rows.append(self.rows_copy[index])
-        # sleep(200)
+
+        if len(self.rows_copy) == 0:
+            self.rows.append(self.rows_copy[0])
+
+        # The most stupid script i ve ever written
+        i = 0
+        while i < 20000000:
+            i += 1
 
         self.setCursor(QCursor(QtCore.Qt.CursorShape.ArrowCursor))
-        # print("here")
         self.addRows()
 
     def addRows(self):
@@ -175,7 +186,6 @@ class Page2(QMainWindow):
         for column in cols:
             for row in range(len(self.rows)):
                 grade = self.rows[row]["grade"]
-                status = self.rows[row]["status"]
                 col_ind = cols.index(column)
                 if column == "Preview":
                     last_col_widget = QWidget()
@@ -187,7 +197,7 @@ class Page2(QMainWindow):
                     patient_name = pat_dicom_img.data_element('PatientName').value
                     preview_button.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
                                                                               self.mask_dicom[10], patient_name
-                                                                              , self.rows[row]["organs"]))
+                                                                              , self.rows[row]["organ"]))
                     eye_img = QIcon("assets/eye.png")
                     preview_button.setIcon(eye_img)
                     preview_button.setFlat(True)
@@ -199,33 +209,6 @@ class Page2(QMainWindow):
                     # changing color of each row based on its grade
                     self.set_item_background(item, grade)
                     self.table.setItem(row, col_ind, item)  # your contents
-
-        # for index, row in enumerate(self.rows):
-        #     # print(index, row)
-        #     self.table.setItem(index, 0, QTableWidgetItem(row["organs"]))
-        #     self.table.setItem(index, 1, QTableWidgetItem(row["status"]))
-        #     last_col_widget = QWidget()
-        #     last_col_layout = QHBoxLayout()
-        #     last_col_widget.setLayout(last_col_layout)
-        #     btn = QPushButton('')
-        #     btn.setIcon(QtGui.QIcon('assets/eye.png'))
-        #     btn.setFlat(True)
-        #     pat_dicom_img = self.patient_dicom[0]
-        #     patient_name = pat_dicom_img.data_element('PatientName').value
-        #     btn.clicked.connect(lambda: self.preview_dicom(pat_dicom_img,
-        #                                                    self.mask_dicom[10], patient_name, row["organs"]))
-        #
-        #     last_col_layout.addWidget(btn)
-        #     self.table.setCellWidget(index, 2, last_col_widget)
-        #
-        #     for i in range(0, 3):
-        #         grade = row["grade"]
-        #         if i == 2:
-        #             self.set_widget_background(last_col_widget, grade)
-        #             continue
-        #         print(i, index, len(self.rows))
-        #         self.table.item(index, i).setBackground(self.getRGBcolor(grade))
-        #         self.table.item(index, i).setTextAlignment(QtCore.Qt.AlignCenter)
 
     @staticmethod
     def set_item_background(item, grade):

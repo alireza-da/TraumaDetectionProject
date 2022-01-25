@@ -302,7 +302,7 @@ font-size:8pt;</string>
  font-weight:500;</string>
            </property>
            <property name="text">
-            <string>Used Algorithm</string>
+            <string>Selected Algorithm</string>
            </property>
            <property name="margin">
             <number>5</number>
@@ -329,7 +329,7 @@ font-size:8pt;</string>
  font-weight:500;</string>
            </property>
            <property name="text">
-            <string>Unused Algorithm</string>
+            <string>Alternative Algorithms</string>
            </property>
            <property name="margin">
             <number>5</number>

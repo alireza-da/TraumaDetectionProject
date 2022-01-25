@@ -36,6 +36,8 @@ class Installation:
                         shutil.copyfile("page2.ui", f"{self.installation_path}/page2.ui")
                         shutil.copyfile("history.ui", f"{self.installation_path}/history.ui")
                         shutil.copytree("assets", f"{self.installation_path}/assets")
+                        shutil.copytree("../MASKS_DICOM", f"{self.installation_path}/MASKS_DICOM")
+                        shutil.copytree("../PATIENT_DICOM", f"{self.installation_path}/PATIENT_DICOM")
                     except (shutil.SameFileError, FileExistsError):
                         logging.info("Config Files already exist")
                     try:

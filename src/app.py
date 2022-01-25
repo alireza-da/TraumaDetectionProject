@@ -10,7 +10,7 @@ import Type as tP
 class MyApp(QMainWindow):
     def __init__(self, isReadFileMode):
         super().__init__()
-        print(os.listdir())
+
         uic.loadUi('app.ui', self)
         self.manual_file_path_button.clicked.connect(self.getFileName)
         self.manual_result_path_button.clicked.connect(partial(self.getDirectory, self.manual_result_path_text))
@@ -85,16 +85,16 @@ class MyApp(QMainWindow):
         msgBox.exec()
 
     def getFileName(self):
-        file_filter = 'Data file (*.dcm *.nii)'
-        response = QFileDialog.getOpenFileName(
+        # file_filter = 'Data file (*.dcm *.nii)'
+        response = QFileDialog.getExistingDirectory(
             parent=self,
-            caption='select a file',
+            caption='select a folder',
             directory=os.getcwd(),
-            filter=file_filter,
-            initialFilter=file_filter
+            # filter=file_filter,
+            # initialFilter=file_filter
         )
-        if response[0]:
-            self.manual_file_path_text.setText(response[0])
+        if response:
+            self.manual_file_path_text.setText(response)
             self.is_manual_file_path_set = True
 
     def getDirectory(self, the_label):
@@ -119,43 +119,44 @@ class MyApp(QMainWindow):
             QMessageBox.warning(self, "Lack of information", "You must fill result folder!")
             return
 
-        try:
-            if self.isReadFileMode:
-                type = dH.getFileType(self.manual_file_path_text.text())
-                if type == tP.Type.DICOM:
-                    file = self.readFilePyDicom()
-                    # work with file
-                    self.writeFilePyDicom(file)
-                    # ow = OutputWindow(
-                    #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
-                    #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
-                    #     "image_*", "image_*")
-                    # ow.create_window()
-
-                else:
-                    file = self.readFileNifti()
-                    print(file)
-                    # work with nifti
-                    # todo
-
-            else:
-                file = self.readFileByte()
-                # work with file if it is nifti
-                self.writeFileByte(b''.join(file))
-            self.workWithFileDone()
-        except Exception as e:
-            print(e)
-            self.workingWithFIleError()
+        # try:
+        #     if self.isReadFileMode:
+        #         type = dH.getFileType(self.manual_file_path_text.text())
+        #         if type == tP.Type.DICOM:
+        #             file = self.readFilePyDicom()
+        #             # work with file
+        #             self.writeFilePyDicom(file)
+        #             # ow = OutputWindow(
+        #             #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\MASKS_DICOM\\liver",
+        #             #     "C:\\Users\\rasta\\Downloads\\Compressed\\3Dircadb1.17\\3Dircadb1.17\\PATIENT_DICOM",
+        #             #     "image_*", "image_*")
+        #             # ow.create_window()
+        #
+        #         else:
+        #             file = self.readFileNifti()
+        #             print(file)
+        #             # work with nifti
+        #             # todo
+        #
+        #     else:
+        #         file = self.readFileByte()
+        #         # work with file if it is nifti
+        #         self.writeFileByte(b''.join(file))
+        #     self.workWithFileDone()
+        # except Exception as e:
+        #     print(e)
+        #     self.workingWithFIleError()
 
         self.goToPage2()
 
     def goToPage2(self):
         from page2 import Page2
         if self.thePage2 is None:
+            print(self.manual_file_path_text.text())
             self.thePage2 = Page2(False,
-                                  os.getcwd() + "\\..\\MASKS_DICOM\\liver",
-                                  os.getcwd() + "\\..\\PATIENT_DICOM",
-                                  "image_*", "image_*", "test/output_folder")
+                                  self.manual_file_path_text.text(),
+                                  os.getcwd() + "\\PATIENT_DICOM",
+                                  "image_*", "image_*", self.manual_result_path_text.text())
         self.thePage2.show()
         self.close()
 
@@ -181,18 +182,12 @@ class MyApp(QMainWindow):
     def workWithFileDone(self):
         QMessageBox.information(self, "Information", "File Saved, Started the Detection")
         self.goToPage2()
-        # ow = OutputWindow(
-        #     os.getcwd() + "\\..\\MASKS_DICOM\\liver",
-        #     os.getcwd() + "\\..\\PATIENT_DICOM",
-        #     "image_*", "image_*", "test/output_folder")
-        # ow.create_window()
 
     def workingWithFIleError(self):
         QMessageBox.warning(self, "Warning", "Problem occurred while working with the file!")
 
 
 if __name__ == "__main__":
-    print("hello")
     app = QApplication(sys.argv)
     gui = MyApp(False)
     gui.show()

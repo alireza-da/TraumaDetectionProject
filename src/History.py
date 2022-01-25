@@ -12,7 +12,8 @@ class History(QMainWindow):
         uic.loadUi('history.ui', self)
         self.setButton()
         self.setTable()
-
+        self.setWindowTitle("History")
+        self.setWindowIcon(QtGui.QIcon("assets/logo.png"))
         self.MyApp = None
 
     def setButton(self):

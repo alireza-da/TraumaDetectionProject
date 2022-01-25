@@ -305,7 +305,7 @@ padding: 8px 40px ;  ; border-radius: 20px ; border-color: #21078E;
 font: 14pt &quot;Segoe UI&quot;;color : #21078E;font-weight:600; </string>
     </property>
     <property name="text">
-     <string>Start</string>
+     <string>Next</string>
     </property>
    </widget>
   </widget>

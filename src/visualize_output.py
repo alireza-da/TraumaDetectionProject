@@ -13,6 +13,7 @@ from PyQt5 import uic
 from pydicom import read_file, dcmread
 from fpdf import FPDF
 
+
 # importing libraries
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
