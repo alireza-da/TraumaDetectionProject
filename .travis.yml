@@ -4,6 +4,5 @@ python:
 
 scripts:
 - mkdir app
-- ./venv/Scripts/activate
 - cd src
 - python Type.py
