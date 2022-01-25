@@ -8,7 +8,7 @@ import logging
                                                    "lowercase letters e.g. windows, linux, mac")
 @click.option('--path', default=".", help="Installation Path")
 def os(os_name, path):
-    logging.info(f"Installing Package on {os_name}")
+    # logging.info(f"Installing Package on {os_name}")
     install = Installation(os_name, path, "app.py")
     install.install()
 
